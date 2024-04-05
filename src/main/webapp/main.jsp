@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Main Page</title>
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css"> <!-- Ensure the path is correct -->
 </head>
 <body>
 <div class="container">
@@ -11,10 +11,12 @@
         User user = (User) session.getAttribute("user");
         if (user != null) {
     %>
-    <h1>Main Page - Welcome, ${user.username}!</h1>
+    <h1>Main Page - Welcome, <%= user.getUsername() %>!</h1> <!-- Updated for consistent scriptlet usage -->
     <div class="button-container">
+        <% if (user.isAdmin()) { %>
+        <a href="admin-servlet" class="button">Admin Panel</a>
+        <% } %>
         <a href="logout-servlet" class="button">Logout</a>
-        <a href="#" class="button">Todo</a>
     </div>
     <%
         } else {
