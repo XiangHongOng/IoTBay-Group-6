@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(45) NOT NULL,
-    desc LONGTEXT,
+    descp LONGTEXT,
     price DECIMAL(10, 2) NOT NULL
     );
+
+INSERT INTO USERS (username, password, email, isAdmin) VALUES ('admin', 'admin', 'admin@admin.com', TRUE);
