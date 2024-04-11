@@ -17,6 +17,16 @@ public class UserDAO {
         }
     }
 
+    private User extractUserFromResultSet(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setId(resultSet.getInt("id"));
+        user.setUsername(resultSet.getString("username"));
+        user.setPassword(resultSet.getString("password"));
+        user.setEmail(resultSet.getString("email"));
+        user.setAdmin(resultSet.getBoolean("isAdmin"));
+        return user;
+    }
+
     public void registerUser(User user) {
         try (Connection connection = DBConnector.getConnection()) {
             String query = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
@@ -92,14 +102,19 @@ public class UserDAO {
         return null;
     }
 
-    private User extractUserFromResultSet(ResultSet resultSet) throws SQLException {
-        User user = new User();
-        user.setId(resultSet.getInt("id"));
-        user.setUsername(resultSet.getString("username"));
-        user.setPassword(resultSet.getString("password"));
-        user.setEmail(resultSet.getString("email"));
-        user.setAdmin(resultSet.getBoolean("isAdmin"));
-        return user;
+    public User getUserByEmail(String email) {
+        String query = "SELECT * FROM users WHERE email = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return extractUserFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<User> getAllUsers() {
@@ -118,6 +133,7 @@ public class UserDAO {
         return users;
     }
 
+
     public void setAsAdmin(int userId, boolean makeAdmin) {
         String query = "UPDATE users SET isAdmin = ? WHERE id = ?";
         try (Connection connection = DBConnector.getConnection();
@@ -135,6 +151,18 @@ public class UserDAO {
         try (Connection connection = DBConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setPassword(int userId, String password) {
+        String query = "UPDATE users SET password = ? WHERE id = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, password);
+            statement.setInt(2, userId);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
