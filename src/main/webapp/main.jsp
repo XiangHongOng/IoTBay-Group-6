@@ -11,7 +11,8 @@
         User user = (User) session.getAttribute("user");
         if (user != null) {
     %>
-    <h1>Main Page - Welcome, <%= user.getUsername() %>!</h1> <!-- Updated for consistent scriptlet usage -->
+    <h1>Main Page</h1> <!-- Updated for consistent scriptlet usage -->
+    <h2>Welcome, <%=user.getUsername()%>!</h2>
     <div class="button-container">
         <% if (user.isAdmin()) { %>
         <a href="admin-servlet" class="button">Admin Panel</a>
