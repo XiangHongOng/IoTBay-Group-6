@@ -5,47 +5,67 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.project.iotprojecttest.model.User;
+import org.project.iotprojecttest.model.dao.CustomerDAO;
 import org.project.iotprojecttest.model.dao.UserDAO;
+import org.project.iotprojecttest.model.objects.Customer;
+import org.project.iotprojecttest.model.objects.User;
 
 import java.io.IOException;
 
-@WebServlet(name = "register", value = "/register-servlet")
-public class RegisterServlet extends HttpServlet
-{
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
+@WebServlet(name = "register", value = "/register")
+public class RegisterServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("register.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String phone = request.getParameter("phone");
+        String type = request.getParameter("customerType");
 
         UserDAO userDAO = new UserDAO();
+        CustomerDAO customerDAO = new CustomerDAO();
 
-        if (userDAO.doesUsernameExist(username)) {
-            request.setAttribute("errorMessage", "Username already exists. Please choose a different username.");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
-            return;
-        }
-
-        if (userDAO.doesEmailExist(email)) {
+        if (userDAO.getUserByEmail(email) != null)
+        {
             request.setAttribute("errorMessage", "Email already exists. Please use a different email.");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
         User registeredUser = new User();
-        registeredUser.setUsername(username);
-        registeredUser.setPassword(password);
+        registeredUser.setFullName(fullName);
         registeredUser.setEmail(email);
+        registeredUser.setPassword(password);
+        registeredUser.setPhone(phone);
 
-        // Submit registered user to the database, commented so no spam. Uncomment if you wish to submit users
-        userDAO.registerUser(registeredUser);
+        // Submit registered user to the database
+        int userId = userDAO.createUser(registeredUser);
+        if (userId == 0)
+        {
+            request.setAttribute("errorMessage", "User registration failed. Please try again.");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
 
-        request.getSession().setAttribute("user", registeredUser);
-        request.getRequestDispatcher("welcome.jsp").forward(request, response);
+        User fetchedUser = userDAO.getUserById(userId);
+        if (fetchedUser == null)
+        {
+            request.setAttribute("errorMessage", "Failed to retrieve user data after registration.");
+            request.getRequestDispatcher("register.jsp").forward(request, response);
+            return;
+        }
+
+        Customer registeredCustomer = new Customer();
+        registeredCustomer.setUserId(userId); // Set the UserId from the registeredUser
+        registeredCustomer.setCustomerType(type);
+        registeredCustomer.setAddress(null);
+        registeredCustomer.setEmail(email); // Store the email in the Customer object
+        customerDAO.createCustomer(registeredCustomer);
+
+        request.getSession().setAttribute("user", fetchedUser);
+        response.sendRedirect("index");
     }
 }
