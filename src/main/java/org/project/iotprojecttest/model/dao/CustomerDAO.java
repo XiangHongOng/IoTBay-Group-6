@@ -141,4 +141,24 @@ public class CustomerDAO {
         return false;
     }
 
+    public void updateCustomer(Customer customer) {
+        String query = "UPDATE Customers SET UserID = ?, CustomerType = ?, Address = ?, Email = ?, IsActive = ? WHERE CustomerID = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            if (customer.getUserId() != 0) {
+                statement.setInt(1, customer.getUserId());
+            } else {
+                statement.setNull(1, Types.INTEGER);
+            }
+            statement.setString(2, customer.getCustomerType());
+            statement.setString(3, customer.getAddress());
+            statement.setString(4, customer.getEmail());
+            statement.setBoolean(5, customer.getActive());
+            statement.setInt(6, customer.getCustomerId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

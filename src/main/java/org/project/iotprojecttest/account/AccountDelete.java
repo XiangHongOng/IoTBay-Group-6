@@ -6,7 +6,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.project.iotprojecttest.model.dao.CustomerDAO;
 import org.project.iotprojecttest.model.dao.UserDAO;
+import org.project.iotprojecttest.model.objects.Customer;
 import org.project.iotprojecttest.model.objects.User;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ public class AccountDelete extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserDAO userDAO = new UserDAO();
+        CustomerDAO customerDAO = new CustomerDAO();
         User user = (User) session.getAttribute("user");
 
         // Check if the user is logged in
@@ -31,6 +34,15 @@ public class AccountDelete extends HttpServlet {
             // Verify the user's email and password
             if (userDAO.verifyUser(user.getEmail(), confirmPassword))
             {
+                Customer customer = customerDAO.getCustomerByUserId(user.getUserId());
+
+                //If a customer account has been made on sign-up, deactivate it
+                if (customer != null)
+                {
+                    customer.setActive(false);
+                    customerDAO.updateCustomer(customer);
+                }
+
                 // Delete the user account
                 userDAO.deleteUser(user.getUserId());
                 session.invalidate();
