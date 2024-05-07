@@ -7,11 +7,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.project.iotprojecttest.model.dao.CustomerDAO;
+import org.project.iotprojecttest.model.dao.OrderDAO;
+import org.project.iotprojecttest.model.dao.OrderLineItemDAO;
+import org.project.iotprojecttest.model.dao.ProductDAO;
 import org.project.iotprojecttest.model.dao.UserDAO;
 import org.project.iotprojecttest.model.objects.Customer;
+import org.project.iotprojecttest.model.objects.Order;
+import org.project.iotprojecttest.model.objects.OrderLineItem;
 import org.project.iotprojecttest.model.objects.User;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "accountdelete", urlPatterns = {"/account/accountdelete"})
 public class AccountDelete extends HttpServlet {
@@ -24,6 +30,10 @@ public class AccountDelete extends HttpServlet {
         HttpSession session = request.getSession();
         UserDAO userDAO = new UserDAO();
         CustomerDAO customerDAO = new CustomerDAO();
+        OrderDAO orderDAO = new OrderDAO();
+        OrderLineItemDAO orderLineItemDAO = new OrderLineItemDAO();
+        ProductDAO productDAO = new ProductDAO();
+
         User user = (User) session.getAttribute("user");
 
         // Check if the user is logged in
@@ -39,6 +49,19 @@ public class AccountDelete extends HttpServlet {
                 //If a customer account has been made on sign-up, deactivate it
                 if (customer != null)
                 {
+                    List<Order> orders = orderDAO.getUnpaidOrdersByCustomerId(customer.getCustomerId());
+
+                    for (Order order : orders)
+                    {
+                        List<OrderLineItem> items = orderLineItemDAO.getOrderLineItemsByOrderId(order.getOrderId());
+                        for (OrderLineItem item : items)
+                        {
+                            int productId = item.getProductId();
+                            int quantity = item.getOrderedQuantity();
+                            productDAO.restoreProductStock(productId, quantity);
+                        }
+                    }
+
                     customer.setActive(false);
                     customerDAO.updateCustomer(customer);
                 }

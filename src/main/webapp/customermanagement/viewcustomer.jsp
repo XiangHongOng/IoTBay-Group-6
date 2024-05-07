@@ -133,7 +133,6 @@
             <div class="form-actions">
                 <input type="submit" value="Update" class="btn btn-primary">
                 <a href="deletecustomer?id=<%= customer.getCustomerId() %>" class="btn btn-danger">Delete</a>
-                <a href="deactivatecustomer?id=<%= customer.getCustomerId() %>" class="btn btn-cancel">Deactivate</a>
             </div>
         </form>
     </div>

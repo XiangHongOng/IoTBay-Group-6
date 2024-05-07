@@ -6,9 +6,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.project.iotprojecttest.model.dao.CustomerDAO;
+import org.project.iotprojecttest.model.dao.OrderDAO;
+import org.project.iotprojecttest.model.dao.OrderLineItemDAO;
+import org.project.iotprojecttest.model.dao.ProductDAO;
 import org.project.iotprojecttest.model.dao.StaffDAO;
 import org.project.iotprojecttest.model.dao.UserDAO;
 import org.project.iotprojecttest.model.objects.Customer;
+import org.project.iotprojecttest.model.objects.Order;
+import org.project.iotprojecttest.model.objects.OrderLineItem;
 import org.project.iotprojecttest.model.objects.User;
 
 import java.io.IOException;
@@ -19,6 +24,9 @@ public class DeleteCustomerController extends HttpServlet {
     private CustomerDAO customerDAO;
     private StaffDAO staffDAO;
     private UserDAO userDAO;
+    private OrderDAO orderDAO;
+    private OrderLineItemDAO orderLineItemDAO;
+    private ProductDAO productDAO;
 
     @Override
     public void init() throws ServletException {
@@ -43,6 +51,20 @@ public class DeleteCustomerController extends HttpServlet {
         // Check if the customer exists
         if (customer != null)
         {
+            //Restore unpaid order stock
+            List<Order> orders = orderDAO.getUnpaidOrdersByCustomerId(customer.getCustomerId());
+
+            for (Order order : orders)
+            {
+                List<OrderLineItem> items = orderLineItemDAO.getOrderLineItemsByOrderId(order.getOrderId());
+                for (OrderLineItem item : items)
+                {
+                    int productId = item.getProductId();
+                    int quantity = item.getOrderedQuantity();
+                    productDAO.restoreProductStock(productId, quantity);
+                }
+            }
+
             // Delete the customer
             customerDAO.deleteUser(customerId);
 
