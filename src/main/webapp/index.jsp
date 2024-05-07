@@ -33,6 +33,15 @@
                     <li><a href="payment/paymenthistory">Payment History</a></li>
                 </ul>
             </li>
+            <%
+                if (user != null && staffDAO.isUserStaff(user.getUserId())) { %>
+            <li class="dropdown">
+                <a href="#">Account Management</a>
+                <ul class="dropdown-menu">
+                    <li><a href="staff/customermanagement">Customer Management</a></li>
+                </ul>
+            </li>
+            <% } %>
         </ul>
         <div class="user-actions">
             <% if (session.getAttribute("user") != null) { %>

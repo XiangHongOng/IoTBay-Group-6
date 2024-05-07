@@ -9,11 +9,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerDAO {
 
     public int createCustomer(Customer customer) {
-        String query = "INSERT INTO Customers (UserID, CustomerType, Address, Email, IsActive) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Customers (UserID, FullName, CustomerType, Address, Email, IsActive) VALUES (?, ?, ?, ?, ?, COALESCE(?, true))";
         try (Connection connection = DBConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             if (customer.getUserId() != 0) {
@@ -21,10 +23,15 @@ public class CustomerDAO {
             } else {
                 statement.setNull(1, Types.INTEGER);
             }
-            statement.setString(2, customer.getCustomerType());
-            statement.setString(3, customer.getAddress());
-            statement.setString(4, customer.getEmail());
-            statement.setBoolean(5, customer.getActive());
+            statement.setString(2, customer.getFullName());
+            statement.setString(3, customer.getCustomerType());
+            statement.setString(4, customer.getAddress());
+            statement.setString(5, customer.getEmail());
+            if (customer.getActive() != null) {
+                statement.setBoolean(6, customer.getActive());
+            } else {
+                statement.setNull(6, Types.BOOLEAN);
+            }
             statement.executeUpdate();
 
             ResultSet generatedKeys = statement.getGeneratedKeys();
@@ -48,6 +55,7 @@ public class CustomerDAO {
                 Customer customer = new Customer();
                 customer.setCustomerId(resultSet.getInt("CustomerID"));
                 customer.setUserId(resultSet.getInt("UserID"));
+                customer.setFullName(resultSet.getString("FullName"));
                 customer.setCustomerType(resultSet.getString("CustomerType"));
                 customer.setAddress(resultSet.getString("Address"));
                 customer.setEmail(resultSet.getString("Email"));
@@ -70,6 +78,7 @@ public class CustomerDAO {
                 Customer customer = new Customer();
                 customer.setCustomerId(resultSet.getInt("CustomerID"));
                 customer.setUserId(resultSet.getInt("UserID"));
+                customer.setFullName(resultSet.getString("FullName"));
                 customer.setCustomerType(resultSet.getString("CustomerType"));
                 customer.setAddress(resultSet.getString("Address"));
                 customer.setEmail(resultSet.getString("Email"));
@@ -114,6 +123,7 @@ public class CustomerDAO {
                 Customer customer = new Customer();
                 customer.setCustomerId(resultSet.getInt("CustomerID"));
                 customer.setUserId(resultSet.getInt("UserID"));
+                customer.setFullName(resultSet.getString("FullName"));
                 customer.setCustomerType(resultSet.getString("CustomerType"));
                 customer.setAddress(resultSet.getString("Address"));
                 customer.setEmail(resultSet.getString("Email"));
@@ -142,7 +152,7 @@ public class CustomerDAO {
     }
 
     public void updateCustomer(Customer customer) {
-        String query = "UPDATE Customers SET UserID = ?, CustomerType = ?, Address = ?, Email = ?, IsActive = ? WHERE CustomerID = ?";
+        String query = "UPDATE Customers SET UserID = ?, FullName = ?, CustomerType = ?, Address = ?, Email = ?, IsActive = ? WHERE CustomerID = ?";
         try (Connection connection = DBConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             if (customer.getUserId() != 0) {
@@ -150,15 +160,100 @@ public class CustomerDAO {
             } else {
                 statement.setNull(1, Types.INTEGER);
             }
-            statement.setString(2, customer.getCustomerType());
-            statement.setString(3, customer.getAddress());
-            statement.setString(4, customer.getEmail());
-            statement.setBoolean(5, customer.getActive());
-            statement.setInt(6, customer.getCustomerId());
+            statement.setString(2, customer.getFullName());
+            statement.setString(3, customer.getCustomerType());
+            statement.setString(4, customer.getAddress());
+            statement.setString(5, customer.getEmail());
+            statement.setBoolean(6, customer.getActive());
+            statement.setInt(7, customer.getCustomerId());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void deleteUser(int customerId) {
+        String query = "DELETE FROM Customers WHERE CustomerID = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, customerId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public List<Customer> searchCustomersByName(String name) {
+        List<Customer> customers = new ArrayList<>();
+        String query = "SELECT * FROM Customers WHERE FullName LIKE ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, "%" + name + "%");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Customer customer = new Customer();
+                customer.setCustomerId(resultSet.getInt("CustomerID"));
+                customer.setUserId(resultSet.getInt("UserID"));
+                customer.setFullName(resultSet.getString("FullName"));
+                customer.setCustomerType(resultSet.getString("CustomerType"));
+                customer.setAddress(resultSet.getString("Address"));
+                customer.setEmail(resultSet.getString("Email"));
+                customer.setActive(resultSet.getBoolean("IsActive"));
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+
+    public List<Customer> searchCustomersByType(String customerType) {
+        List<Customer> customers = new ArrayList<>();
+        String query = "SELECT * FROM Customers WHERE CustomerType = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, customerType);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Customer customer = new Customer();
+                customer.setCustomerId(resultSet.getInt("CustomerID"));
+                customer.setUserId(resultSet.getInt("UserID"));
+                customer.setFullName(resultSet.getString("FullName"));
+                customer.setCustomerType(resultSet.getString("CustomerType"));
+                customer.setAddress(resultSet.getString("Address"));
+                customer.setEmail(resultSet.getString("Email"));
+                customer.setActive(resultSet.getBoolean("IsActive"));
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public List<Customer> getAllCustomers() {
+        List<Customer> customers = new ArrayList<>();
+        String query = "SELECT * FROM Customers";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Customer customer = new Customer();
+                customer.setCustomerId(resultSet.getInt("CustomerID"));
+                customer.setUserId(resultSet.getInt("UserID"));
+                customer.setFullName(resultSet.getString("FullName"));
+                customer.setCustomerType(resultSet.getString("CustomerType"));
+                customer.setAddress(resultSet.getString("Address"));
+                customer.setEmail(resultSet.getString("Email"));
+                customer.setActive(resultSet.getBoolean("IsActive"));
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
     }
 
 }

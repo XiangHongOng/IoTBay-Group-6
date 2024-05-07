@@ -36,7 +36,6 @@ public class RegisterServlet extends HttpServlet {
         }
 
         User registeredUser = new User();
-        registeredUser.setFullName(fullName);
         registeredUser.setEmail(email);
         registeredUser.setPassword(password);
         registeredUser.setPhone(phone);
@@ -60,6 +59,7 @@ public class RegisterServlet extends HttpServlet {
 
         Customer registeredCustomer = new Customer();
         registeredCustomer.setUserId(userId); // Set the UserId from the registeredUser
+        registeredCustomer.setFullName(fullName);
         registeredCustomer.setCustomerType(type);
         registeredCustomer.setAddress(null);
         registeredCustomer.setEmail(email); // Store the email in the Customer object

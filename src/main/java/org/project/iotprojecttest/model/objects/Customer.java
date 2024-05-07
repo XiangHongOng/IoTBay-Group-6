@@ -7,6 +7,8 @@ public class Customer {
     private String address;
     private String email;
     private Boolean isActive;
+    private String fullName;
+
 
     // Getters and setters
     public int getCustomerId() {
@@ -56,4 +58,13 @@ public class Customer {
     public void setActive(Boolean active) {
         isActive = active;
     }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
 }

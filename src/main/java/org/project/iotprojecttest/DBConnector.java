@@ -5,7 +5,7 @@ import java.sql.*;
 public class DBConnector {
     private static final String URL = "jdbc:mysql://localhost:3306/iotassignment";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "placeholder";
+    private static final String PASSWORD = "Pepsicola1";
 
     static {
         try {

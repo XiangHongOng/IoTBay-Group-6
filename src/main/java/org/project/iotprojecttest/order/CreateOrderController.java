@@ -76,11 +76,13 @@ public class CreateOrderController extends HttpServlet {
         {
             // Check if the customer exists
             String customerEmail = request.getParameter("customerEmail");
+            String customerName = request.getParameter("customerName");
             customer = customerDAO.getCustomerByEmail(customerEmail);
             if (customer == null)
             {
                 // Create a new customer
                 customer = new Customer();
+                customer.setFullName(customerName);
                 customer.setCustomerType("Individual");
                 customer.setEmail(customerEmail);
                 int customerId = customerDAO.createCustomer(customer);

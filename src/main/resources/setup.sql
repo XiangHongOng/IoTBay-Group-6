@@ -5,7 +5,6 @@ USE iotbay;
 -- Create 'users' Table
 CREATE TABLE Users (
                        UserID INT PRIMARY KEY AUTO_INCREMENT,
-                       FullName VARCHAR(50) NOT NULL,
                        Email VARCHAR(50) NOT NULL UNIQUE,
                        Password VARCHAR(20) NOT NULL,
                        Phone VARCHAR(15) NOT NULL
@@ -22,6 +21,7 @@ CREATE TABLE UserAccessLogs (
 CREATE TABLE Customers (
                            CustomerID INT PRIMARY KEY AUTO_INCREMENT,
                            UserID INT UNIQUE,
+                           FullName VARCHAR(50) NOT NULL,
                            CustomerType VARCHAR(20) NOT NULL,
                            Address VARCHAR(100),
                            Email VARCHAR(50),
@@ -32,6 +32,7 @@ CREATE TABLE Customers (
 CREATE TABLE Staff (
                        StaffID INT PRIMARY KEY AUTO_INCREMENT,
                        UserID INT UNIQUE,
+                       FullName VARCHAR(50) NOT NULL,
                        Position VARCHAR(20) NOT NULL,
                        Address VARCHAR(100) NOT NULL,
                        FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE SET NULL
@@ -91,44 +92,36 @@ CREATE TABLE Shipments (
 );
 
 -- Insert data into Users table
-INSERT INTO Users (FullName, Email, Password, Phone) VALUES
-                                                         ('John Doe', 'john.doe@example.com', 'password123', '1234567890'),
-                                                         ('Jane Smith', 'jane.smith@example.com', 'password456', '9876543210'),
-                                                         ('Michael Johnson', 'michael.johnson@example.com', 'password789', '4561237890'),
-                                                         ('Emily Davis', 'emily.davis@example.com', 'password012', '7890123456'),
-                                                         ('Robert Wilson', 'robert.wilson@example.com', 'password345', '2345678901'),
-                                                         ('Alice Brown', 'alice.brown@example.com', 'password678', '6789012345'), -- Add new user
-                                                         ('Bob Thompson', 'bob.thompson@example.com', 'password901', '9012345678'), -- Add new user
-                                                         ('Charlie Anderson', 'charlie.anderson@example.com', 'password234', '2345678901'), -- Add new user
-                                                         ('David Taylor', 'david.taylor@example.com', 'password567', '5678901234'), -- Add new user
-                                                         ('Eve Miller', 'eve.miller@example.com', 'password890', '8901234567'), -- Add new user
-                                                         ('Cam', 'cam@cam.com', '123', '123');
-
--- Insert data into UserAccessLogs table
-INSERT INTO UserAccessLogs (UserID, LoginDateTime, LogoutDateTime) VALUES
-                                                                       (1, '2023-05-01 10:00:00', '2023-05-01 12:30:00'),
-                                                                       (2, '2023-05-02 08:30:00', '2023-05-02 17:45:00'),
-                                                                       (3, '2023-05-03 09:15:00', NULL),
-                                                                       (4, '2023-05-04 11:20:00', '2023-05-04 14:50:00'),
-                                                                       (5, '2023-05-05 13:00:00', '2023-05-05 16:10:00');
+INSERT INTO Users (Email, Password, Phone) VALUES
+                                               ('john.doe@example.com', 'password123', '1234567890'),
+                                               ('jane.smith@example.com', 'password456', '9876543210'),
+                                               ('michael.johnson@example.com', 'password789', '4561237890'),
+                                               ('emily.davis@example.com', 'password012', '7890123456'),
+                                               ('robert.wilson@example.com', 'password345', '2345678901'),
+                                               ('alice.brown@example.com', 'password678', '6789012345'),
+                                               ('bob.thompson@example.com', 'password901', '9012345678'),
+                                               ('charlie.anderson@example.com', 'password234', '2345678901'),
+                                               ('david.taylor@example.com', 'password567', '5678901234'),
+                                               ('eve.miller@example.com', 'password890', '8901234567'),
+                                               ('cam@cam.com', '123', '123');
 
 -- Insert data into Customers table
-INSERT INTO Customers (UserID, CustomerType, Address, Email, IsActive) VALUES
-                                                                           (1, 'Individual', '123 Main St, City, Country', null, true),
-                                                                           (2, 'Individual', '456 Oak Ave, Town, Country', null, true),
-                                                                           (3, 'Individual', '789 Elm St, Village, Country', null, true),
-                                                                           (4, 'Individual', '321 Pine Rd, City, Country', 'robert.wilson@example.com', true),
-                                                                           (5, 'Individual', '654 Maple Ln, Town, Country', null, false),
-                                                                           (11, 'Individual', '', null, true);
+INSERT INTO Customers (UserID, FullName, CustomerType, Address, Email, IsActive) VALUES
+                                                                                     (1, 'John Doe', 'Individual', '123 Main St, City, Country', null, true),
+                                                                                     (2, 'Jane Smith', 'Individual', '456 Oak Ave, Town, Country', null, true),
+                                                                                     (3, 'Michael Johnson', 'Individual', '789 Elm St, Village, Country', null, true),
+                                                                                     (4, 'Emily Davis', 'Individual', '321 Pine Rd, City, Country', 'robert.wilson@example.com', true),
+                                                                                     (5, 'Robert Wilson', 'Individual', '654 Maple Ln, Town, Country', null, false),
+                                                                                     (NULL, 'Anonymous Customer', 'Individual', '', 'anonymous@example.com', true);
 
 -- Insert data into Staff table
-INSERT INTO Staff (UserID, Position, Address) VALUES
-                                                  (6, 'Manager', '987 Cedar Blvd, City, Country'),
-                                                  (7, 'Sales Representative', '159 Birch Way, Town, Country'),
-                                                  (8, 'Customer Support', '753 Willow Dr, Village, Country'),
-                                                  (9, 'Shipping Coordinator', '246 Spruce Ave, City, Country'),
-                                                  (10, 'Inventory Specialist', '840 Ash St, Town, Country'),
-                                                  (11, 'Owner', 'No dox plz');
+INSERT INTO Staff (UserID, FullName, Position, Address) VALUES
+                                                            (6, 'Alice Brown', 'Manager', '987 Cedar Blvd, City, Country'),
+                                                            (7, 'Bob Thompson', 'Sales Representative', '159 Birch Way, Town, Country'),
+                                                            (8, 'Charlie Anderson', 'Customer Support', '753 Willow Dr, Village, Country'),
+                                                            (9, 'David Taylor', 'Shipping Coordinator', '246 Spruce Ave, City, Country'),
+                                                            (10, 'Eve Miller', 'Inventory Specialist', '840 Ash St, Town, Country'),
+                                                            (11, 'Cam', 'Owner', 'No dox plz');
 
 -- Insert data into Suppliers table
 INSERT INTO Suppliers (ContactName, Company, Email, Address) VALUES
@@ -150,7 +143,7 @@ INSERT INTO Products (ProductName, ProductType, UnitPrice, Quantity) VALUES
 INSERT INTO Orders (CustomerID, OrderDate) VALUES
                                                (1, '2023-05-01'),
                                                (2, '2023-05-02'),
-                                               (NULL, '2023-05-03'),
+                                               (6, '2023-05-03'),
                                                (3, '2023-05-04'),
                                                (4, '2023-05-05');
 
@@ -181,3 +174,11 @@ INSERT INTO Shipments (ShipmentMethod, ShipmentDate, ShipmentAddress, OrderID) V
                                                                                    ('Standard Shipping', '2023-05-05', '789 Elm St, Village, Country', 3),
                                                                                    ('Express Shipping', '2023-05-06', '321 Pine Rd, City, Country', 4),
                                                                                    ('Standard Shipping', '2023-05-07', '654 Maple Ln, Town, Country', 5);
+
+-- Insert data into UserAccessLogs table
+INSERT INTO UserAccessLogs (UserID, LoginDateTime, LogoutDateTime) VALUES
+                                                                       (1, '2023-05-01 10:00:00', '2023-05-01 12:30:00'),
+                                                                       (2, '2023-05-02 08:30:00', '2023-05-02 17:45:00'),
+                                                                       (3, '2023-05-03 09:15:00', NULL),
+                                                                       (4, '2023-05-04 11:20:00', '2023-05-04 14:50:00'),
+                                                                       (5, '2023-05-05 13:00:00', '2023-05-05 16:10:00');

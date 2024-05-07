@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     private int userId;
-    private String fullName;
     private String email;
     private String password;
     private String phone;
@@ -14,7 +13,6 @@ public class User implements Serializable {
 
     public User(User other) {
         this.userId = other.userId;
-        this.fullName = other.fullName;
         this.email = other.email;
         this.password = other.password;
         this.phone = other.phone;
@@ -27,14 +25,6 @@ public class User implements Serializable {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     public String getEmail() {

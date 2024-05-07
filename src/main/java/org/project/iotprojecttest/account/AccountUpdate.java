@@ -6,7 +6,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.project.iotprojecttest.model.dao.CustomerDAO;
 import org.project.iotprojecttest.model.dao.UserDAO;
+import org.project.iotprojecttest.model.objects.Customer;
 import org.project.iotprojecttest.model.objects.User;
 
 import java.io.IOException;
@@ -21,10 +23,13 @@ public class AccountUpdate extends HttpServlet {
         HttpSession session = request.getSession();
         User originalUser = (User) session.getAttribute("user");
         UserDAO userDAO = new UserDAO();
+        CustomerDAO customerDAO = new CustomerDAO();
 
         // Check if the user is logged in
         if (originalUser != null)
         {
+            Customer customer = customerDAO.getCustomerByUserId(originalUser.getUserId());
+
             // Update the user details
             User updatedUser = new User(originalUser);
             String fullName = request.getParameter("fullName");
@@ -35,7 +40,8 @@ public class AccountUpdate extends HttpServlet {
             // Check if the name field is empty
             if (!fullName.isEmpty())
             {
-                updatedUser.setFullName(fullName);
+                customer.setFullName(fullName);
+                customerDAO.updateCustomer(customer);
             }
 
             // Check if the email field is empty

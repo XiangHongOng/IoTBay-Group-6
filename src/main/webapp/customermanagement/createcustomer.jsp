@@ -1,18 +1,19 @@
 <%@ page import="org.project.iotprojecttest.model.objects.User" %>
-<%@ page import="org.project.iotprojecttest.model.dao.UserDAO" %>
-<%@ page import="java.util.List" %>
-<%@ page import="org.project.iotprojecttest.model.objects.UserAccessLog" %>
-<%@ page import="org.project.iotprojecttest.model.dao.UserAccessLogDAO" %>
-<%@ page import="org.project.iotprojecttest.model.dao.StaffDAO" %>
-<%@ page import="org.project.iotprojecttest.model.dao.CustomerDAO" %>
-<%@ page import="org.project.iotprojecttest.model.objects.Customer" %>
-
+<%@ page import="org.project.iotprojecttest.model.dao.StaffDAO" %><%--
+  Created by IntelliJ IDEA.
+  User: camse
+  Date: 5/05/2024
+  Time: 5:15 pm
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Account</title>
+    <title>Create Customer</title>
     <link rel="stylesheet" type="text/css" href="../css/styles.css">
 </head>
 <body>
+
 <header>
     <nav>
         <div class="logo">IoTBay</div>
@@ -44,14 +45,14 @@
             <li class="dropdown">
                 <a href="#">Account Management</a>
                 <ul class="dropdown-menu">
-                    <li><a href="../staff/customermanagement">Customer Management</a></li>
+                    <li><a href="customermanagement">Customer Management</a></li>
                 </ul>
             </li>
             <% } %>
         </ul>
         <div class="user-actions">
             <% if (session.getAttribute("user") != null) { %>
-            <a href="accountdetails" class="<%= request.getRequestURI().endsWith("accountdetails.jsp") ? "active" : "" %>">Account</a>
+            <a href="../account/accountdetails" class="<%= request.getRequestURI().endsWith("accountdetails.jsp") ? "active" : "" %>">Account</a>
             <a href="../logout-servlet">Logout</a>
             <% } else { %>
             <a href="../login">Login</a>
@@ -62,30 +63,39 @@
 </header>
 
 <main>
-    <ul class="account-nav">
-        <li><a href="accountdetails" class="<%= request.getRequestURI().endsWith("accountdetails.jsp") ? "active" : "" %>">Account Details</a></li>
-        <li><a href="accountupdate" class="<%= request.getRequestURI().endsWith("account-update-details.jsp") ? "active" : "" %>">Update Details</a></li>
-        <li><a href="accountdelete" class="<%= request.getRequestURI().endsWith("account-delete.jsp") ? "active" : "" %>">Delete Account</a></li>
-        <li><a href="accountlogs" class="<%= request.getRequestURI().endsWith("account-access-log.jsp") ? "active" : "" %>">Access Logs</a></li>
-    </ul>
-    <div>
-        <div class="form-container">
-            <h2>Account Details</h2>
-            <%
-                if (user != null) {
-                    CustomerDAO customerDAO = new CustomerDAO();
-                    Customer customer = customerDAO.getCustomerByUserId(user.getUserId());
-            %>
-            <ul class="account-details">
-                <li><strong>Full Name:</strong> <%= customer != null ? customer.getFullName() : "Not set"%></li>
-                <li><strong>Email:</strong> <%= user.getEmail() %></li>
-                <li><strong>Phone:</strong> <%= user.getPhone() %></li>
-            </ul>
-            <% } else { %>
-            <p>You are not logged in.</p>
-            <% } %>
-        </div>
+    <div class="form-container">
+        <h2>Create Customer</h2>
+
+        <form action="createcustomer" method="post" class="customer-form">
+            <div class="form-group">
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" name="fullName">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+            </div>
+
+            <div class="form-group">
+                <label for="customerType">Customer Type:</label>
+                <select id="customerType" name="customerType">
+                    <option value="individual">Individual</option>
+                    <option value="company">Company</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address">
+            </div>
+
+            <div class="form-actions">
+                <input type="submit" value="Create" class="btn btn-primary">
+            </div>
+        </form>
     </div>
 </main>
+
 </body>
 </html>

@@ -10,13 +10,12 @@ import java.util.List;
 public class UserDAO {
 
     public int createUser(User user) {
-        String query = "INSERT INTO users (FullName, Email, Password, Phone) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO users (Email, Password, Phone) VALUES (?, ?, ?)";
         try (Connection connection = DBConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, user.getFullName());
-            statement.setString(2, user.getEmail());
-            statement.setString(3, user.getPassword());
-            statement.setString(4, user.getPhone());
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getPhone());
             statement.executeUpdate();
 
             ResultSet generatedKeys = statement.getGeneratedKeys();
@@ -38,7 +37,6 @@ public class UserDAO {
             if (resultSet.next()) {
                 User user = new User();
                 user.setUserId(resultSet.getInt("UserID"));
-                user.setFullName(resultSet.getString("FullName"));
                 user.setEmail(resultSet.getString("Email"));
                 user.setPassword(resultSet.getString("Password"));
                 user.setPhone(resultSet.getString("Phone"));
@@ -59,7 +57,6 @@ public class UserDAO {
             if (resultSet.next()) {
                 User user = new User();
                 user.setUserId(resultSet.getInt("UserID"));
-                user.setFullName(resultSet.getString("FullName"));
                 user.setEmail(resultSet.getString("Email"));
                 user.setPassword(resultSet.getString("Password"));
                 user.setPhone(resultSet.getString("Phone"));
@@ -80,7 +77,6 @@ public class UserDAO {
             while (resultSet.next()) {
                 User user = new User();
                 user.setUserId(resultSet.getInt("UserID"));
-                user.setFullName(resultSet.getString("FullName"));
                 user.setEmail(resultSet.getString("Email"));
                 user.setPassword(resultSet.getString("Password"));
                 user.setPhone(resultSet.getString("Phone"));
@@ -93,14 +89,13 @@ public class UserDAO {
     }
 
     public boolean updateUser(User user) {
-        String query = "UPDATE users SET FullName = ?, Email = ?, Password = ?, Phone = ? WHERE UserID = ?";
+        String query = "UPDATE users SET Email = ?, Password = ?, Phone = ? WHERE UserID = ?";
         try (Connection connection = DBConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, user.getFullName());
-            statement.setString(2, user.getEmail());
-            statement.setString(3, user.getPassword());
-            statement.setString(4, user.getPhone());
-            statement.setInt(5, user.getUserId());
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getPhone());
+            statement.setInt(4, user.getUserId());
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -120,28 +115,6 @@ public class UserDAO {
         }
     }
 
-    public List<User> searchUsersByFullName(String fullName) {
-        List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM users WHERE FullName LIKE ?";
-        try (Connection connection = DBConnector.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, "%" + fullName + "%");
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                User user = new User();
-                user.setUserId(resultSet.getInt("UserID"));
-                user.setFullName(resultSet.getString("FullName"));
-                user.setEmail(resultSet.getString("Email"));
-                user.setPassword(resultSet.getString("Password"));
-                user.setPhone(resultSet.getString("Phone"));
-                users.add(user);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return users;
-    }
-
     public List<User> searchUsersByPhone(String phone) {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM users WHERE Phone LIKE ?";
@@ -152,7 +125,6 @@ public class UserDAO {
             while (resultSet.next()) {
                 User user = new User();
                 user.setUserId(resultSet.getInt("UserID"));
-                user.setFullName(resultSet.getString("FullName"));
                 user.setEmail(resultSet.getString("Email"));
                 user.setPassword(resultSet.getString("Password"));
                 user.setPhone(resultSet.getString("Phone"));

@@ -1,5 +1,7 @@
 <%@ page import="org.project.iotprojecttest.model.objects.User" %>
 <%@ page import="org.project.iotprojecttest.model.dao.StaffDAO" %>
+<%@ page import="org.project.iotprojecttest.model.dao.CustomerDAO" %>
+<%@ page import="org.project.iotprojecttest.model.objects.Customer" %>
 
 <html>
 <head>
@@ -33,6 +35,15 @@
                     <li><a href="../payment/paymenthistory">Payment History</a></li>
                 </ul>
             </li>
+            <%
+                if (user != null && staffDAO.isUserStaff(user.getUserId())) { %>
+            <li class="dropdown">
+                <a href="#">Account Management</a>
+                <ul class="dropdown-menu">
+                    <li><a href="../staff/customermanagement">Customer Management</a></li>
+                </ul>
+            </li>
+            <% } %>
         </ul>
         <div class="user-actions">
             <% if (session.getAttribute("user") != null) { %>
@@ -58,6 +69,8 @@
         <h2>Update Details</h2>
         <%
             if (user != null) {
+                CustomerDAO customerDAO = new CustomerDAO();
+                Customer customer = customerDAO.getCustomerByUserId(user.getUserId());
         %>
 
         <%
@@ -82,7 +95,7 @@
 
         <form action="../account/accountupdate" method="post">
             <label for="fullName">Full Name:</label>
-            <input type="text" id="fullName" name="fullName" value="<%= user.getFullName() %>">
+            <input type="text" id="fullName" name="fullName" value="<%= customer != null ? customer.getFullName() : "Not set" %>">
 
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" value="<%= user.getEmail() %>">

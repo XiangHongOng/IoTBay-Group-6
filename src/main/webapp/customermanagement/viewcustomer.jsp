@@ -1,16 +1,21 @@
 <%@ page import="org.project.iotprojecttest.model.objects.User" %>
 <%@ page import="org.project.iotprojecttest.model.dao.StaffDAO" %>
-<%@ page import="org.project.iotprojecttest.model.dao.PaymentDAO" %>
-<%@ page import="org.project.iotprojecttest.model.objects.Payment" %>
-<%@ page import="org.project.iotprojecttest.model.dao.OrderDAO" %>
-<%@ page import="org.project.iotprojecttest.model.objects.Order" %>
-<%@ page import="java.util.List" %>
+<%@ page import="org.project.iotprojecttest.model.objects.Customer" %>
+<%@ page import="org.project.iotprojecttest.model.dao.UserDAO" %><%--
+  Created by IntelliJ IDEA.
+  User: camse
+  Date: 5/05/2024
+  Time: 5:15 pm
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Update Payment</title>
+    <title>View Customer</title>
     <link rel="stylesheet" type="text/css" href="../css/styles.css">
 </head>
 <body>
+
 <header>
     <nav>
         <div class="logo">IoTBay</div>
@@ -33,8 +38,8 @@
             <li class="dropdown">
                 <a href="#">Payments</a>
                 <ul class="dropdown-menu">
-                    <li><a href="paymentmanagement">Payment Management</a></li>
-                    <li><a href="paymenthistory">Payment History</a></li>
+                    <li><a href="../payment/paymentmanagement">Payment Management</a></li>
+                    <li><a href="../payment/paymenthistory">Payment History</a></li>
                 </ul>
             </li>
             <%
@@ -42,7 +47,7 @@
             <li class="dropdown">
                 <a href="#">Account Management</a>
                 <ul class="dropdown-menu">
-                    <li><a href="../staff/customermanagement">Customer Management</a></li>
+                    <li><a href="customermanagement">Customer Management</a></li>
                 </ul>
             </li>
             <% } %>
@@ -61,7 +66,7 @@
 
 <main>
     <div class="form-container">
-        <h2>View Payment</h2>
+        <h2>View Customer</h2>
 
         <%
             String successMessage = (String) request.getAttribute("successMessage");
@@ -83,49 +88,52 @@
             }
         %>
 
-        <%
-            int paymentId = (int) request.getAttribute("paymentId");
-            PaymentDAO paymentDAO = new PaymentDAO();
-            Payment payment = paymentDAO.getPaymentById(paymentId);
+        <% Customer customer = (Customer) request.getAttribute("customer");
+            UserDAO userDAO = new UserDAO();
 
-            OrderDAO orderDAO = new OrderDAO();
-            Order order = orderDAO.getOrderById(payment.getOrderId());
-
-            double orderTotalAmount = orderDAO.calculateOrderTotalAmount(order.getOrderId());
-            double totalPaid = paymentDAO.getTotalPaidAmountByOrderId(order.getOrderId());
-
-            double remainingAmount = orderTotalAmount - totalPaid;
+            User userObject = userDAO.getUserById(customer.getUserId());
         %>
 
-        <p>Order Total: <%= orderTotalAmount %></p>
-        <p>Total Paid: <%= totalPaid %></p>
-        <p>Remaining Amount: <%= remainingAmount %></p>
+        <form action="viewcustomer" method="post" class="customer-form">
+            <input type="hidden" name="customerId" value="<%= customer.getCustomerId() %>">
 
-        <form action="updatepayment" method="post" class="payment-form">
-            <input type="hidden" name="paymentId" value="<%= request.getAttribute("paymentId") %>">
             <div class="form-group">
-                <label for="paymentMethod">Payment Method:</label>
-                <select id="paymentMethod" name="paymentMethod" required>
-                    <option value="Credit Card" <%= request.getAttribute("paymentMethod").equals("Credit Card") ? "selected" : "" %>>Credit Card</option>
-                    <option value="PayPal" <%= request.getAttribute("paymentMethod").equals("PayPal") ? "selected" : "" %>>PayPal</option>
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" name="fullName" value="<%= customer.getFullName() %>">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="<%= customer.getEmail() %>">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone" value="<%= userObject != null ? userObject.getPhone() : "" %>">
+            </div>
+
+            <div class="form-group">
+                <label for="customerType">Customer Type:</label>
+                <select id="customerType" name="customerType">
+                    <option value="individual" <%= customer.getCustomerType().equals("individual") ? "selected" : "" %>>Individual</option>
+                    <option value="company" <%= customer.getCustomerType().equals("company") ? "selected" : "" %>>Company</option>
                 </select>
             </div>
+
             <div class="form-group">
-                <label for="creditCardDetails">Credit Card Details:</label>
-                <input type="text" id="creditCardDetails" name="creditCardDetails" value="<%= request.getAttribute("creditCardDetails") %>" required>
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" value="<%= customer.getAddress() != null ? customer.getAddress() : "" %>">
             </div>
+
             <div class="form-group">
-                <label for="amount">Amount:</label>
-                <input type="number" id="amount" name="amount" step="0.01" value="<%= request.getAttribute("amount") %>" required>
+                <label for="isActive">Active:</label>
+                <input type="checkbox" id="isActive" name="isActive" <%= customer.getActive() ? "checked" : "" %>>
             </div>
-            <div class="form-group">
-                <label for="paymentDate">Payment Date:</label>
-                <input type="date" id="paymentDate" name="paymentDate" value="<%= request.getAttribute("paymentDate") %>" required>
-            </div>
+
             <div class="form-actions">
-                <input type="submit" value="Update Payment" class="btn btn-primary">
-                <a href="deletepayment?paymentId=<%= request.getAttribute("paymentId") %>" class="btn btn-danger">Delete Payment</a>
-                <a href="submitpayment?paymentId=<%= request.getAttribute("paymentId") %>" class="btn btn-success">Submit Payment</a>
+                <input type="submit" value="Update" class="btn btn-primary">
+                <a href="deletecustomer?id=<%= customer.getCustomerId() %>" class="btn btn-danger">Delete</a>
+                <a href="deactivatecustomer?id=<%= customer.getCustomerId() %>" class="btn btn-cancel">Deactivate</a>
             </div>
         </form>
     </div>

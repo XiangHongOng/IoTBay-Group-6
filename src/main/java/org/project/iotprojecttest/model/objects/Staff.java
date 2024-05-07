@@ -8,6 +8,7 @@ public class Staff implements Serializable {
     private int userId;
     private String position;
     private String address;
+    private String fullName;
 
     public int getStaffId() {
         return staffId;
@@ -39,5 +40,13 @@ public class Staff implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }
