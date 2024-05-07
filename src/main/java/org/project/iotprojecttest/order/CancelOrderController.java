@@ -10,6 +10,7 @@ import org.project.iotprojecttest.model.dao.OrderLineItemDAO;
 import org.project.iotprojecttest.model.dao.ProductDAO;
 import org.project.iotprojecttest.model.objects.Order;
 import org.project.iotprojecttest.model.objects.OrderLineItem;
+import org.project.iotprojecttest.model.util.OrderUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,14 +31,10 @@ public class CancelOrderController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int orderId = Integer.parseInt(request.getParameter("id"));
-        List<OrderLineItem> orderLineItems = orderLineItemDAO.getOrderLineItemsByOrderId(orderId);
 
         //Get all items in the order and restore the stock of each product
-        for (OrderLineItem orderLineItem : orderLineItems) {
-            int productId = orderLineItem.getProductId();
-            int quantity = orderLineItem.getOrderedQuantity();
-            productDAO.restoreProductStock(productId, quantity);
-        }
+        OrderUtil orderUtil = new OrderUtil();
+        orderUtil.restoreProductStockForOrder(orderId);
 
         //Update the order status to "Cancelled"
         orderDAO.updateOrderStatus(orderId, "Cancelled");
