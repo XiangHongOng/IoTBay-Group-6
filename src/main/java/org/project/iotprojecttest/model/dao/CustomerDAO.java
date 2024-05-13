@@ -172,7 +172,7 @@ public class CustomerDAO {
         }
     }
 
-    public void deleteUser(int customerId) {
+    public void deleteCustomer(int customerId) {
         String query = "DELETE FROM Customers WHERE CustomerID = ?";
         try (Connection connection = DBConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {

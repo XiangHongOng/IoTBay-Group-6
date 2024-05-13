@@ -46,7 +46,7 @@ public class ProductManagementController extends HttpServlet {
                 List<Product> products = productDAO.getAllProducts();
                 request.setAttribute("products", products);
                 // Forward to the product management page
-                request.getRequestDispatcher("../paymentmanagement/paymentmanagement.jsp").forward(request, response);
+                request.getRequestDispatcher("productmanagement.jsp").forward(request, response);
             }
             else
             {

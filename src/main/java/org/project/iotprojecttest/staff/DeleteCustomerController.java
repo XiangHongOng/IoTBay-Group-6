@@ -54,7 +54,7 @@ public class DeleteCustomerController extends HttpServlet {
             orderUtil.restoreProductStockForUnpaidOrders(customer.getCustomerId());
 
             // Delete the customer
-            customerDAO.deleteUser(customerId);
+            customerDAO.deleteCustomer(customerId);
 
             // Delete the user if it exists
             if (customer.getUserId() != 0)

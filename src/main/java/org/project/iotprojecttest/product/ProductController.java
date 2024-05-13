@@ -39,7 +39,8 @@ public class ProductController extends HttpServlet {
         request.getRequestDispatcher("products.jsp").forward(request, response);
     }
 
-    private List<Product> filterProducts(List<Product> products, String searchQuery) {
+    private List<Product> filterProducts(List<Product> products, String searchQuery)
+    {
         List<Product> filteredProducts = new ArrayList<>();
         for (Product product : products) {
             if (product.getProductName().toLowerCase().contains(searchQuery.toLowerCase()) ||

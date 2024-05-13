@@ -9,18 +9,24 @@ import java.util.List;
 
 public class ProductDAO {
 
-    public void createProduct(Product product) {
+    public int createProduct(Product product) {
         String query = "INSERT INTO products (ProductName, ProductType, UnitPrice, Quantity) VALUES (?, ?, ?, ?)";
         try (Connection connection = DBConnector.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, product.getProductName());
             statement.setString(2, product.getProductType());
             statement.setDouble(3, product.getUnitPrice());
             statement.setInt(4, product.getQuantity());
             statement.executeUpdate();
+
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return 0;
     }
 
     public Product getProductById(int productId) {
