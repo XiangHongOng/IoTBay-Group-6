@@ -97,50 +97,6 @@ public class ProductDAO {
         }
     }
 
-    public List<Product> searchProductsByName(String name) {
-        List<Product> products = new ArrayList<>();
-        String query = "SELECT * FROM products WHERE ProductName LIKE ?";
-        try (Connection connection = DBConnector.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, "%" + name + "%");
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Product product = new Product();
-                product.setProductId(resultSet.getInt("ProductID"));
-                product.setProductName(resultSet.getString("ProductName"));
-                product.setProductType(resultSet.getString("ProductType"));
-                product.setUnitPrice(resultSet.getDouble("UnitPrice"));
-                product.setQuantity(resultSet.getInt("Quantity"));
-                products.add(product);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return products;
-    }
-
-    public List<Product> searchProductsByType(String type) {
-        List<Product> products = new ArrayList<>();
-        String query = "SELECT * FROM products WHERE ProductType = ?";
-        try (Connection connection = DBConnector.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, type);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Product product = new Product();
-                product.setProductId(resultSet.getInt("ProductID"));
-                product.setProductName(resultSet.getString("ProductName"));
-                product.setProductType(resultSet.getString("ProductType"));
-                product.setUnitPrice(resultSet.getDouble("UnitPrice"));
-                product.setQuantity(resultSet.getInt("Quantity"));
-                products.add(product);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return products;
-    }
-
     public void updateProductStock(int productId, int quantity) {
         String query = "UPDATE products SET Quantity = Quantity - ? WHERE ProductID = ?";
         try (Connection connection = DBConnector.getConnection();

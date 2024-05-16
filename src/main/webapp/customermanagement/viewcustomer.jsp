@@ -104,7 +104,7 @@
 
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="<%= customer.getEmail() %>">
+                <input type="email" id="email" name="email" value="<%= customer.getEmail() != null ? customer.getEmail() : userObject.getEmail()%>">
             </div>
 
             <div class="form-group">
@@ -132,7 +132,7 @@
 
             <div class="form-actions">
                 <input type="submit" value="Update" class="btn btn-primary">
-                <a href="deletecustomer?id=<%= customer.getCustomerId() %>" class="btn btn-danger">Delete</a>
+                <a href="deletecustomer?id=<%= customer.getCustomerId() %>" class="btn-cancel">Delete</a>
             </div>
         </form>
     </div>

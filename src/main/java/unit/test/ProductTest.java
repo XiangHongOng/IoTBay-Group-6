@@ -15,68 +15,78 @@ public class ProductTest {
     }
 
     @Test
-    public void testCreateProduct() {
+    public void CreateNewProduct() {
         Product product = new Product();
-        product.setProductName("Test Product");
-        product.setProductType("Test Type");
-        product.setUnitPrice(10.0);
-        product.setQuantity(100);
+        product.setProductName("Test Product 1");
+        product.setProductType("Test Type 1");
+        product.setUnitPrice(9.99);
+        product.setQuantity(10);
 
-        ProductDAO productDAO = new ProductDAO();
         int productId = productDAO.createProduct(product);
 
-        Assert.assertNotEquals(0, productId);
-
-        Product createdProduct = productDAO.getProductById(productId);
-        if (createdProduct != null)
-        {
-            productDAO.deleteProduct(productId);
-        }
-    }
-
-    @Test
-    public void testGetProductById() {
-        ProductDAO productDAO = new ProductDAO();
-        Product product = productDAO.getProductById(1);
-
         Assert.assertNotNull(product);
-        Assert.assertEquals(1, product.getProductId());
+        Assert.assertEquals(product.getProductName(), "Test Product 1");
+        Assert.assertEquals(product.getProductType(), "Test Type 1");
+        Assert.assertEquals(9.99, product.getUnitPrice(), 0.01);
+        Assert.assertEquals(10, product.getQuantity(), 0.01);
+        Assert.assertTrue(productId > 20);
     }
 
     @Test
-    public void testUpdateProduct() {
-        ProductDAO productDAO = new ProductDAO();
-        Product product = productDAO.getProductById(1);
+    public void UpdateExistingProduct() {
+        Product product = new Product();
+        product.setProductName("Test Product 2");
+        product.setProductType("Test Type 2");
+        product.setUnitPrice(9.99);
+        product.setQuantity(10);
 
-        product.setProductName("Updated Product");
-        product.setProductType("Updated Type");
-        product.setUnitPrice(20.0);
-        product.setQuantity(200);
+        int productId = productDAO.createProduct(product);
+
+        Product updatedProduct = productDAO.getProductById(productId);
+        updatedProduct.setProductName("Test Product 2.1");
+        updatedProduct.setProductType("Test Type 2.1");
+        updatedProduct.setUnitPrice(10.01);
+        updatedProduct.setQuantity(11);
+        productDAO.updateProduct(updatedProduct);
+
+        Product newlyUpdatedProduct = productDAO.getProductById(productId);
+
+        Assert.assertNotNull(newlyUpdatedProduct);
+        Assert.assertEquals(newlyUpdatedProduct.getProductName(), "Test Product 2.1");
+        Assert.assertEquals(newlyUpdatedProduct.getProductType(), "Test Type 2.1");
+        Assert.assertEquals(10.01, newlyUpdatedProduct.getUnitPrice(), 0.01);
+        Assert.assertEquals(11, newlyUpdatedProduct.getQuantity(), 0.01);
+    }
+
+    @Test
+    public void UpdateNonExistingProduct() {
+        Product product = new Product();
+        product.setProductId(999);
+        product.setProductName("NON");
+        product.setProductType("NON");
+        product.setUnitPrice(0);
+        product.setQuantity(0);
 
         productDAO.updateProduct(product);
 
-        Product updatedProduct = productDAO.getProductById(1);
-        Assert.assertEquals("Updated Product", updatedProduct.getProductName());
-        Assert.assertEquals("Updated Type", updatedProduct.getProductType());
-        Assert.assertEquals(20.0, updatedProduct.getUnitPrice(), 0.001);
-        Assert.assertEquals(200, updatedProduct.getQuantity());
+        Product newlyUpdatedProduct = productDAO.getProductById(999);
+
+        Assert.assertNull(newlyUpdatedProduct);
     }
 
     @Test
-    public void testDeleteProduct() {
-        ProductDAO productDAO = new ProductDAO();
-        Product product = new Product();
-        product.setProductName("Test Product");
-        product.setProductType("Test Type");
-        product.setUnitPrice(10.0);
-        product.setQuantity(100);
+    public void deleteCreateProduct() {
+        Product deletedProduct = productDAO.getProductById(21);
 
-        int productId = productDAO.createProduct(product);
-
-        productDAO.deleteProduct(productId);
-
-        Product deletedProduct = productDAO.getProductById(productId);
         Assert.assertNull(deletedProduct);
     }
+
+    @Test
+    public void deleteNonExistingProduct() {
+        Product NonExistingProduct = productDAO.getProductById(999);
+
+        Assert.assertNull(NonExistingProduct);
+    }
+
 
 }

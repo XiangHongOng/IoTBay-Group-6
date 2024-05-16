@@ -5,10 +5,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.project.iotprojecttest.model.dao.CustomerDAO;
 import org.project.iotprojecttest.model.dao.OrderDAO;
 import org.project.iotprojecttest.model.dao.PaymentDAO;
+import org.project.iotprojecttest.model.objects.Customer;
 import org.project.iotprojecttest.model.objects.Order;
 import org.project.iotprojecttest.model.objects.Payment;
+import org.project.iotprojecttest.model.objects.User;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -17,15 +20,64 @@ import java.util.List;
 @WebServlet(name = "createpayment", value = "/payment/createpayment")
 public class CreatePaymentController extends HttpServlet {
     private PaymentDAO paymentDAO;
+    private OrderDAO orderDAO;
+    private CustomerDAO customerDAO;
 
     @Override
     public void init() throws ServletException {
         paymentDAO = new PaymentDAO();
+        orderDAO = new OrderDAO();
+        customerDAO = new CustomerDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("../paymentmanagement/createpayment.jsp").forward(request, response);
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        String customerEmail = request.getParameter("customerEmail");
+
+        User user = (User) request.getSession().getAttribute("user");
+        boolean isAuthorized = false;
+
+        // Check if the user is authorized to view the payment details
+        Order order = orderDAO.getOrderById(orderId);
+        if (order != null && order.getStatus() != null && (order.getStatus().equalsIgnoreCase("Saved") || order.getStatus().equalsIgnoreCase("Submitted")))
+        {
+            // Get the customer by order ID
+            Customer customer = customerDAO.getCustomerByCustomerId(order.getCustomerId());
+            if (customer != null)
+            {
+                // Get the payment by order ID
+                if (user != null)
+                {
+                    // Logged-in user
+                    if (customer.getUserId() == user.getUserId())
+                    {
+                        isAuthorized = true;
+                    }
+                }
+                else
+                {
+                    // Anonymous user
+                    if (customer.getUserId() == 0 && customer.getEmail() != null && customer.getEmail().equals(customerEmail))
+                    {
+                        isAuthorized = true;
+                    }
+                }
+            }
+        }
+
+        System.out.println("Authorized: " + isAuthorized);
+
+        if (isAuthorized)
+        {
+            request.getRequestDispatcher("../paymentmanagement/createpayment.jsp").forward(request, response);
+        }
+        else
+        {
+            // Handle unauthorized access
+            request.setAttribute("errorMessage", "Unauthorized access to payment details.");
+            request.getRequestDispatcher("../paymentmanagement/paymentmanagement.jsp").forward(request, response);
+        }
     }
 
     @Override

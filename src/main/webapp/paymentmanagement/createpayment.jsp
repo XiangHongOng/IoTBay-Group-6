@@ -89,14 +89,9 @@
             PaymentDAO paymentDAO = new PaymentDAO();
 
             double orderTotalAmount = orderDAO.calculateOrderTotalAmount(orderId);
-            List<Payment> payments = paymentDAO.getPaymentsByOrderId(orderId);
+            double totalPaid = paymentDAO.getTotalPaidAmountByOrderId(orderId);
 
-            double totalPaid = 0.0;
-            for (Payment payment : payments) {
-                totalPaid += payment.getAmount();
-            }
-
-            double remainingAmount = orderTotalAmount - totalPaid;
+            double remainingAmount = Math.round((orderTotalAmount - totalPaid) * 100.0) / 100.0;
         %>
 
         <p>Order Total: <%= orderTotalAmount %></p>

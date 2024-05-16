@@ -114,6 +114,7 @@ public class PaymentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        totalPaid = Math.round(totalPaid * 100.0) / 100.0;
         return totalPaid;
     }
 

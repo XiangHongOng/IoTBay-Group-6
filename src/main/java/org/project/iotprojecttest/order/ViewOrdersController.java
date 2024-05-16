@@ -40,7 +40,6 @@ public class ViewOrdersController extends HttpServlet {
         // Check if the user is logged in
         if (user != null)
         {
-            System.out.println("user found");
             // Check if the user is a customer
             Customer customer = customerDAO.getCustomerByUserId(user.getUserId());
             if (customer != null)

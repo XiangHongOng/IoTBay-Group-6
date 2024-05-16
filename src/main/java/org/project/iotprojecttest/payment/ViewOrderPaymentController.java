@@ -25,7 +25,8 @@ public class ViewOrderPaymentController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         paymentDAO = new PaymentDAO();
-        orderDAO = new OrderDAO();        customerDAO = new CustomerDAO();
+        orderDAO = new OrderDAO();
+        customerDAO = new CustomerDAO();
     }
 
     @Override

@@ -67,7 +67,7 @@
 </header>
 
 <main>
-  <div>
+  <div class="form-container">
     <h2 class="access-logs-title">Customer Management</h2>
 
     <%
@@ -90,53 +90,55 @@
       }
     %>
 
-    <div class="form-container">
-      <form action="customermanagement" method="get" class="search-form">
-        <input type="text" name="name" placeholder="Search by name">
-        <select name="type">
-          <option value="">All Types</option>
-          <option value="Individual">Individual</option>
-          <option value="Company">Company</option>
-        </select>
-        <input type="submit" value="Search" class="btn btn-primary">
-      </form>
+    <form action="customermanagement" method="get">
+      <input type="text" name="name" placeholder="Search by name">
+      <select name="type">
+        <option value="">All Types</option>
+        <option value="Individual">Individual</option>
+        <option value="Company">Company</option>
+      </select>
+      <input type="submit" value="Search" class="btn btn-primary">
+    </form>
 
-      <div class="form-actions">
-        <a href="createcustomer" class="btn btn-add">Create Customer</a>
-      </div>
-
+    <div class="form-actions">
+      <a href="createcustomer" class="btn btn-add">Create Customer</a>
     </div>
-
-
-    <table class="order-table-styled">
-      <thead>
-      <tr>
-        <th>Customer ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Type</th>
-        <th>Address</th>
-        <th>Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      <% List<Customer> customers = (List<Customer>) request.getAttribute("customers");
-        for (Customer customer : customers) {
-      %>
-      <tr>
-        <td><%= customer.getCustomerId() %></td>
-        <td><%= customer.getFullName() %></td>
-        <td><%= customer.getEmail() %></td>
-        <td><%= customer.getCustomerType() %></td>
-        <td><%= customer.getAddress() %></td>
-        <td class="action-buttons">
-          <a href="viewcustomer?id=<%= customer.getCustomerId() %>" class="btn btn-view btn-sm">Modify</a>
-        </td>
-      </tr>
-      <% } %>
-      </tbody>
-    </table>
   </div>
+
+  <table class="order-table-styled">
+    <thead>
+    <tr>
+      <th>Customer ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Type</th>
+      <th>Address</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% List<Customer> customers = (List<Customer>) request.getAttribute("customers");
+      for (Customer customer : customers) {
+
+        UserDAO userDAO = new UserDAO();
+        User customerUser = userDAO.getUserById(customer.getUserId());
+    %>
+    <tr>
+      <td><%= customer.getCustomerId() %></td>
+      <td><%= customer.getFullName() %></td>
+      <td><%= customer.getEmail() != null ? customer.getEmail() : customerUser.getEmail()%></td>
+      <td><%= customer.getCustomerType() %></td>
+      <td><%= customer.getAddress() %></td>
+      <td>
+        <form action="viewcustomer" method="get" class="action-form">
+          <input type="hidden" name="id" value="<%= customer.getCustomerId() %>">
+          <input type="submit" value="Modify" class="btn btn-primary">
+        </form>
+      </td>
+    </tr>
+    <% } %>
+    </tbody>
+  </table>
 </main>
 
 </body>

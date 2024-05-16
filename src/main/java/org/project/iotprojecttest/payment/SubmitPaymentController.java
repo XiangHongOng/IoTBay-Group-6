@@ -36,14 +36,12 @@ public class SubmitPaymentController extends HttpServlet {
             Order order = orderDAO.getOrderById(payment.getOrderId());
             if (order != null)
             {
-                // Calculate the total amount of the order
-                double orderTotalAmount = orderDAO.calculateOrderTotalAmount(order.getOrderId());
-                double totalPaid = paymentDAO.getTotalPaidAmountByOrderId(order.getOrderId());
-
                 payment.setStatus("Paid");
                 paymentDAO.updatePayment(payment);
 
-                totalPaid += payment.getAmount();
+                // Calculate the total amount of the order
+                double orderTotalAmount = orderDAO.calculateOrderTotalAmount(order.getOrderId());
+                double totalPaid = paymentDAO.getTotalPaidAmountByOrderId(order.getOrderId());
 
                 // Check if the total amount paid is equal to the total amount of the order
                 if (totalPaid >= orderTotalAmount)
