@@ -41,6 +41,16 @@ public class PaymentTest {
     }
 
     @Test
+    public void testGetPaymentById() {
+        PaymentDAO paymentDAO = new PaymentDAO();
+        Payment payment = paymentDAO.getPaymentById(1);
+
+        Assert.assertNotNull(payment);
+        Assert.assertEquals(1, payment.getPaymentId());
+    }
+
+
+    @Test
     public void testUpdatePayment() {
         Payment payment = new Payment();
         payment.setPaymentMethod("Credit Card");
