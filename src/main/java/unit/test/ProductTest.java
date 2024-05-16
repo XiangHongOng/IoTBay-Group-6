@@ -27,4 +27,38 @@ public class ProductTest {
         Assert.assertTrue(productId > 0);
     }
 
+    @Test
+    public void testUpdateProduct() {
+        Product product = new Product();
+        product.setProductName("Test Product");
+        product.setProductType("Test Type");
+        product.setUnitPrice(9.99);
+        product.setQuantity(10);
+        int productId = productDAO.createProduct(product);
+
+        Product updatedProduct = productDAO.getProductById(productId);
+        updatedProduct.setUnitPrice(19.99);
+        productDAO.updateProduct(updatedProduct);
+
+        Product retrievedProduct = productDAO.getProductById(productId);
+
+        Assert.assertEquals(19.99, retrievedProduct.getUnitPrice(), 0.01);
+    }
+
+    @Test
+    public void testDeleteProduct() {
+        Product product = new Product();
+        product.setProductName("Test Product");
+        product.setProductType("Test Type");
+        product.setUnitPrice(9.99);
+        product.setQuantity(10);
+        int productId = productDAO.createProduct(product);
+
+        productDAO.deleteProduct(productId);
+
+        Product deletedProduct = productDAO.getProductById(productId);
+
+        Assert.assertNull(deletedProduct);
+    }
+
 }
