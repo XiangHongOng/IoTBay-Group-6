@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="iotbay@localhost" uuid="939ecbf9-53ee-418c-a78d-53d3dfb9f0f8">
+    <data-source source="LOCAL" name="iotbay@localhost" uuid="a5ed91e2-f02f-4296-b491-398910fdf45a">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
