@@ -124,18 +124,19 @@
             </div>
             <div class="form-actions centered-actions">
                 <input type="submit" value="Update Payment" class="btn-add">
-
-                <form action="deletepayment" method="get" class="action-form">
-                    <input type="hidden" name="paymentId" value="<%= request.getAttribute("paymentId") %>">
-                    <input type="submit" value="Delete Payment" class="btn-cancel">
-                </form>
-
-                <form action="submitpayment" method="get" class="action-form">
-                    <input type="hidden" name="paymentId" value="<%= request.getAttribute("paymentId") %>">
-                    <input type="submit" value="Submit Payment" class="btn-primary">
-                </form>
             </div>
         </form>
+        <div class="form-actions centered-actions">
+            <form action="deletepayment" method="post" class="action-form">
+                <input type="hidden" name="paymentId" value="<%= request.getAttribute("paymentId") %>">
+                <input type="submit" value="Delete Payment" class="btn-cancel">
+            </form>
+
+            <form action="submitpayment" method="post" class="action-form">
+                <input type="hidden" name="paymentId" value="<%= request.getAttribute("paymentId") %>">
+                <input type="submit" value="Submit Payment" class="btn-primary">
+            </form>
+        </div>
     </div>
 </main>
 

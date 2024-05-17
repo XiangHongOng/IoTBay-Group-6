@@ -12,7 +12,6 @@ import org.project.iotprojecttest.model.objects.Customer;
 import org.project.iotprojecttest.model.objects.User;
 
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(name = "createcustomer", value = "/staff/createcustomer")
 public class CreateCustomerController extends HttpServlet {
@@ -31,8 +30,7 @@ public class CreateCustomerController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User loggedUser = (User) request.getSession().getAttribute("user");
 
-        if (loggedUser == null || !staffDAO.isUserStaff(loggedUser.getUserId()))
-        {
+        if (loggedUser == null || !staffDAO.isUserStaff(loggedUser.getUserId())) {
             response.sendRedirect("../login");
             return;
         }
@@ -55,26 +53,18 @@ public class CreateCustomerController extends HttpServlet {
 
         // Check if the email already exists in the database
         User user = userDAO.getUserByEmail(email);
-        if (user != null)
-        {
+        if (user != null) {
             customer.setUserId(user.getUserId());
         }
 
         // Create the customer
         int customerId = customerDAO.createCustomer(customer);
 
-        if (customerId != 0)
-        {
-            request.setAttribute("successMessage", "Customer created successfully with ID: " + customerId);
-        }
-        else
-        {
+        if (customerId != 0) {
+            response.sendRedirect("customermanagement");
+        } else {
             request.setAttribute("errorMessage", "Failed to create customer.");
+            request.getRequestDispatcher("../customermanagement/createcustomer.jsp").forward(request, response);
         }
-
-        // Retrieve the updated list of customers
-        List<Customer> customers = customerDAO.getAllCustomers();
-        request.setAttribute("customers", customers);
-        request.getRequestDispatcher("../customermanagement/customermanagement.jsp").forward(request, response);
     }
 }

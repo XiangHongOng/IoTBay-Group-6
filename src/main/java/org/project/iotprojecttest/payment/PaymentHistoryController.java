@@ -33,6 +33,11 @@ public class PaymentHistoryController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("../paymentmanagement/paymenthistory.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         String customerEmail = request.getParameter("customerEmail");
         String paymentId = request.getParameter("paymentId");

@@ -30,6 +30,11 @@ public class ViewOrdersController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("../ordermanagement/vieworders.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         String customerEmail = request.getParameter("customerEmail");
         String orderId = request.getParameter("orderId");
@@ -38,31 +43,24 @@ public class ViewOrdersController extends HttpServlet {
         List<Order> orders = new ArrayList<>();
 
         // Check if the user is logged in
-        if (user != null)
-        {
+        if (user != null) {
             // Check if the user is a customer
             Customer customer = customerDAO.getCustomerByUserId(user.getUserId());
-            if (customer != null)
-            {
-                if (!customerDAO.isCustomerActive(customer.getCustomerId()))
-                {
+            if (customer != null) {
+                if (!customerDAO.isCustomerActive(customer.getCustomerId())) {
                     request.setAttribute("errorMessage", "The customer account has been deactivated. Please contact staff for assistance.");
                     request.getRequestDispatcher("../ordermanagement/vieworders.jsp").forward(request, response);
                     return;
                 }
 
                 // Checks if an orderId or orderDate parameter is provided
-                if (orderId != null && !orderId.isEmpty())
-                {
+                if (orderId != null && !orderId.isEmpty()) {
                     // Get the order by orderId and customerId
                     Order order = orderDAO.getOrderByIdAndCustomerId(Integer.parseInt(orderId), customer.getCustomerId());
-                    if (order != null)
-                    {
+                    if (order != null) {
                         orders.add(order);
                     }
-                }
-                else if (orderDate != null && !orderDate.isEmpty())
-                {
+                } else if (orderDate != null && !orderDate.isEmpty()) {
                     try {
                         LocalDate localDate = LocalDate.parse(orderDate);
                         java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
@@ -71,22 +69,17 @@ public class ViewOrdersController extends HttpServlet {
                         // Handle the case when the orderDate parameter is not a valid date
                         request.setAttribute("errorMessage", "Invalid order date format.");
                     }
-                }
-                else
-                {
+                } else {
                     orders = orderDAO.getOrdersByCustomerId(customer.getCustomerId());
                 }
             }
         }
         // Check if the customerEmail parameter is provided
-        else if (customerEmail != null && !customerEmail.isEmpty())
-        {
+        else if (customerEmail != null && !customerEmail.isEmpty()) {
             // Check if the customer exists
             Customer customer = customerDAO.getCustomerByEmail(customerEmail);
-            if (customer != null)
-            {
-                if (!customerDAO.isCustomerActive(customer.getCustomerId()))
-                {
+            if (customer != null) {
+                if (!customerDAO.isCustomerActive(customer.getCustomerId())) {
                     System.out.println("customer deactivated");
                     request.setAttribute("errorMessage", "The customer account has been deactivated. Please contact staff for assistance.");
                     request.getRequestDispatcher("../ordermanagement/vieworders.jsp").forward(request, response);
@@ -94,17 +87,13 @@ public class ViewOrdersController extends HttpServlet {
                 }
 
                 // Checks if an orderId or orderDate parameter is provided
-                if (orderId != null && !orderId.isEmpty())
-                {
+                if (orderId != null && !orderId.isEmpty()) {
                     // Get the order by orderId and customerId
                     Order order = orderDAO.getOrderByIdAndCustomerId(Integer.parseInt(orderId), customer.getCustomerId());
-                    if (order != null)
-                    {
+                    if (order != null) {
                         orders.add(order);
                     }
-                }
-                else if (orderDate != null && !orderDate.isEmpty())
-                {
+                } else if (orderDate != null && !orderDate.isEmpty()) {
                     try {
                         LocalDate localDate = LocalDate.parse(orderDate);
                         java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
@@ -113,14 +102,10 @@ public class ViewOrdersController extends HttpServlet {
                         // Handle the case when the orderDate parameter is not a valid date
                         request.setAttribute("errorMessage", "Invalid order date format.");
                     }
-                }
-                else
-                {
+                } else {
                     orders = orderDAO.getOrdersByCustomerId(customer.getCustomerId());
                 }
-            }
-            else
-            {
+            } else {
                 System.out.println("no customer found");
             }
         }

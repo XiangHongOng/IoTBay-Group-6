@@ -85,7 +85,7 @@
             }
         %>
 
-        <form action="paymentmanagement" method="get" class="order-form">
+        <form action="paymentmanagement" method="post" class="order-form">
             <% if (session.getAttribute("user") == null) { %>
             <label for="customerEmail">Customer Email:</label>
             <input type="email" id="customerEmail" name="customerEmail" required>
@@ -134,13 +134,14 @@
                 <td><%= order.getStatus() %></td>
                 <td class="action-buttons">
                     <% if (payment == null) { %>
-                    <form action="createpayment" method="get" class="action-form">
-                        <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                    <form action="createpayment" method="post" class="action-form">
+                        <input type="hidden" name="action" value="displayForm">
                         <input type="hidden" name="customerEmail" value="<%= customerEmail %>">
+                        <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
                         <input type="submit" value="Create Payment" class="btn btn-primary">
                     </form>
                     <% } else { %>
-                    <form action="vieworderpayment" method="get" class="action-form">
+                    <form action="vieworderpayment" method="post" class="action-form">
                         <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
                         <input type="hidden" name="customerEmail" value="<%= customerEmail %>">
                         <input type="submit" value="View Payment" class="btn btn-primary">

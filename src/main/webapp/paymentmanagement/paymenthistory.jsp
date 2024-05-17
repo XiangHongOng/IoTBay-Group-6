@@ -85,7 +85,7 @@
             }
         %>
 
-        <form action="paymenthistory" method="get" class="payment-form">
+        <form action="paymenthistory" method="post" class="payment-form">
             <% if (session.getAttribute("user") == null) { %>
             <label for="customerEmail">Customer Email:</label>
             <input type="email" id="customerEmail" name="customerEmail" required>
@@ -138,7 +138,7 @@
                 <td><%= payment.getOrderId() %></td>
                 <td class="action-buttons">
                     <% if (customerEmail != null) { %>
-                    <form action="viewpayment" method="get" class="action-form">
+                    <form action="viewpayment" method="post" class="action-form">
                         <input type="hidden" name="id" value="<%= payment.getPaymentId() %>">
                         <input type="hidden" name="customerEmail" value="<%= customerEmail %>">
                         <input type="submit" value="View" class="btn-primary">

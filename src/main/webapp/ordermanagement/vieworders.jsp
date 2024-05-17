@@ -83,7 +83,7 @@
             }
         %>
 
-        <form action="vieworders" method="get">
+        <form action="vieworders" method="post">
             <% if (session.getAttribute("user") == null) { %>
             <label for="customerEmail">Customer Email:</label>
             <input type="email" id="customerEmail" name="customerEmail" required>
@@ -129,16 +129,17 @@
                 <td class="action-buttons">
                     <% if (order.getStatus().equals("Saved")) { %>
                     <div class="button-group">
-                        <form action="editorder" method="get" class="action-form">
-                            <input type="hidden" name="id" value="<%= order.getOrderId() %>">
+                        <form action="editorder" method="post" class="action-form">
+                            <input type="hidden" name="action" value="edit">
+                            <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
                             <input type="submit" value="Edit" class="btn btn-primary btn-sm">
                         </form>
-                        <form action="submitorder" method="get" class="action-form">
-                            <input type="hidden" name="id" value="<%= order.getOrderId() %>">
+                        <form action="submitorder" method="post" class="action-form">
+                            <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
                             <input type="submit" value="Submit" class="btn-add">
                         </form>
-                        <form action="cancelorder" method="get" class="action-form">
-                            <input type="hidden" name="id" value="<%= order.getOrderId() %>">
+                        <form action="cancelorder" method="post" class="action-form">
+                            <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
                             <input type="submit" value="Cancel" class="btn-cancel">
                         </form>
                     </div>
@@ -155,6 +156,5 @@
         <% } %>
     </div>
 </main>
-
 </body>
 </html>

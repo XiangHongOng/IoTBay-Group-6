@@ -7,7 +7,6 @@
 <html>
 <head>
     <title>Product Management</title>
-    <!-- Linking the external CSS file for styling -->
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
@@ -152,7 +151,7 @@
                     <!-- Action buttons for each product: edit and delete -->
                     <div class="action-buttons">
                         <!-- Edit form with hidden inputs to tell the server to edit the product on submission -->
-                        <form action="product-management" method="get" class="action-form">
+                        <form action="product-management" method="post" class="action-form">
                             <input type="hidden" name="action" value="edit">
                             <input type="hidden" name="id" value="<%= product.getProductId() %>">
                             <input type="submit" value="Edit" class="btn-add">

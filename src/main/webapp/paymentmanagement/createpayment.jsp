@@ -99,6 +99,7 @@
         <p>Remaining Amount: <%= remainingAmount %></p>
 
         <form action="createpayment" method="post" class="payment-form">
+            <input type="hidden" name="action" value="createPayment">
             <input type="hidden" name="orderId" value="<%= request.getParameter("orderId") %>">
             <div class="form-group">
                 <label for="paymentMethod">Payment Method:</label>

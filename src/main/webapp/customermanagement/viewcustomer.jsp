@@ -130,9 +130,16 @@
                 <input type="checkbox" id="isActive" name="isActive" <%= customer.getActive() ? "checked" : "" %>>
             </div>
 
-            <div class="form-actions">
-                <input type="submit" value="Update" class="btn btn-primary">
-                <a href="deletecustomer?id=<%= customer.getCustomerId() %>" class="btn-cancel">Delete</a>
+            <div class="form-actions centered-actions">
+                <form action="updatecustomer" method="post" class="action-form">
+                    <input type="hidden" name="id" value="<%= customer.getCustomerId() %>">
+                    <input type="submit" value="Update" class="btn-add">
+                </form>
+
+                <form action="deletecustomer" method="post" class="action-form">
+                    <input type="hidden" name="customerId" value="<%= customer.getCustomerId() %>">
+                    <input type="submit" value="Delete" class="btn-cancel">
+                </form>
             </div>
         </form>
     </div>

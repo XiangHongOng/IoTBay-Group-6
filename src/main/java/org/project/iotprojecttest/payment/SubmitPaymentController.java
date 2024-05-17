@@ -25,7 +25,7 @@ public class SubmitPaymentController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int paymentId = Integer.parseInt(request.getParameter("paymentId"));
 
         // Get payment by id

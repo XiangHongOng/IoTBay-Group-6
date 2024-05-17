@@ -90,7 +90,8 @@
       }
     %>
 
-    <form action="customermanagement" method="get">
+    <form action="customermanagement" method="post">
+      <input type="hidden" name="action" value="search">
       <input type="text" name="name" placeholder="Search by name">
       <select name="type">
         <option value="">All Types</option>
@@ -130,8 +131,9 @@
       <td><%= customer.getCustomerType() %></td>
       <td><%= customer.getAddress() %></td>
       <td>
-        <form action="viewcustomer" method="get" class="action-form">
-          <input type="hidden" name="id" value="<%= customer.getCustomerId() %>">
+        <form action="viewcustomer" method="post" class="action-form">
+          <input type="hidden" name="action" value="edit">
+          <input type="hidden" name="customerId" value="<%= customer.getCustomerId() %>">
           <input type="submit" value="Modify" class="btn btn-primary">
         </form>
       </td>
