@@ -69,6 +69,8 @@ public class CreateOrderController extends HttpServlet {
             customer = customerDAO.getCustomerByUserId(user.getUserId());
             if (customer == null)
             {
+                request.setAttribute("errorMessage", "Account has no customer attached, please contact staff for assistance.");
+                request.getRequestDispatcher("../ordermanagement/createorder.jsp").forward(request, response);
                 return;
             }
         }
