@@ -86,7 +86,7 @@
                 if (request.getParameter("searchDate") != null && !request.getParameter("searchDate").trim().isEmpty()) {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     java.util.Date searchDate = dateFormat.parse(request.getParameter("searchDate"));
-                    userAccessLogs = userAccessLogDAO.searchUserAccessLogsByDate(new java.sql.Date(searchDate.getTime()));
+                    userAccessLogs = userAccessLogDAO.searchUserAccessLogsByDate(new java.sql.Date(searchDate.getTime()), user.getUserId());
                 } else {
                     userAccessLogs = userAccessLogDAO.getUserAccessLogsByUserId(user.getUserId());
                 }

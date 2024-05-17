@@ -65,14 +65,15 @@ public class UserAccessLogDAO {
         return userAccessLogs;
     }
 
-    public List<UserAccessLog> searchUserAccessLogsByDate(java.util.Date date) {
+    public List<UserAccessLog> searchUserAccessLogsByDate(java.util.Date date, int userId) {
         List<UserAccessLog> userAccessLogs = new ArrayList<>();
-        String query = "SELECT * FROM useraccesslogs WHERE DATE(LoginDateTime) = ? OR DATE(LogoutDateTime) = ?";
+        String query = "SELECT * FROM useraccesslogs WHERE (DATE(LoginDateTime) = ? OR DATE(LogoutDateTime) = ?) AND UserID = ?";
         try (Connection connection = DBConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             statement.setDate(1, sqlDate);
             statement.setDate(2, sqlDate);
+            statement.setInt(3, userId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 UserAccessLog userAccessLog = new UserAccessLog();
