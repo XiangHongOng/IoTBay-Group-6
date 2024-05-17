@@ -58,7 +58,7 @@ public class CreatePaymentController extends HttpServlet {
             double orderTotalAmount = orderDAO.calculateOrderTotalAmount(orderId);
             double totalPaid = paymentDAO.getTotalPaidAmountByOrderId(orderId);
 
-            double remainingAmount = orderTotalAmount - totalPaid;
+            double remainingAmount = Math.round((orderTotalAmount - totalPaid) * 100.0) / 100.0;
 
             // Check if the payment amount exceeds the remaining amount
             if (amount > remainingAmount) {
