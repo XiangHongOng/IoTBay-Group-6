@@ -59,7 +59,7 @@
 </header>
 
 <main>
-    <div class="form-container">
+    <div class="product-management-container">
         <h2>Create Order</h2>
 
         <%
@@ -82,42 +82,34 @@
             }
         %>
 
-        <form action="createorder" method="post" class="order-form">
-            <div class="form-group">
-                <label for="productId">Product:</label>
-                <select name="productId" id="productId" required>
-                    <option value="">Select a product</option>
-                    <%
-                        ProductDAO productDAO = new ProductDAO();
-                        List<Product> products = productDAO.getAllProducts();
-                        for (Product product : products) {
-                    %>
-                    <option value="<%= product.getProductId() %>">
-                        <%= product.getProductName() %> (Stock: <%= product.getQuantity() %>)
-                    </option>
-                    <% } %>
-                </select>
-            </div>
+        <form action="createorder" method="post">
+            <label for="productId">Product:</label>
+            <select name="productId" id="productId" required>
+                <option value="">Select a product</option>
+                <%
+                    ProductDAO productDAO = new ProductDAO();
+                    List<Product> products = productDAO.getAllProducts();
+                    for (Product product : products) {
+                %>
+                <option value="<%= product.getProductId() %>">
+                    <%= product.getProductName() %> (Stock: <%= product.getQuantity() %>)
+                </option>
+                <% } %>
+            </select>
 
-            <div class="form-group">
-                <label for="quantity">Quantity:</label>
-                <input type="number" name="quantity" id="quantity" min="1" required>
-            </div>
+            <label for="quantity">Quantity:</label>
+            <input type="number" name="quantity" id="quantity" min="1" required>
 
             <% if (user == null) { %>
-            <div class="form-group">
-                <label for="customerName">Your Name:</label>
-                <input type="text" name="customerName" id="customerName" required>
-            </div>
+            <label for="customerName">Your Name:</label>
+            <input type="text" name="customerName" id="customerName" required>
 
-            <div class="form-group">
-                <label for="customerEmail">Your Email:</label>
-                <input type="email" name="customerEmail" id="customerEmail" required>
-            </div>
+            <label for="customerEmail">Your Email:</label>
+            <input type="email" name="customerEmail" id="customerEmail" required>
             <% } %>
 
-            <div class="form-actions">
-                <input type="submit" value="Save Order" class="btn btn-primary">
+            <div class="form-actions centered-actions">
+                <input type="submit" value="Save Order" class="btn-add">
             </div>
         </form>
     </div>

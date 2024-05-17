@@ -85,21 +85,18 @@
             }
         %>
 
-        <form action="paymenthistory" method="get" class="payment-form">
+        <form action="paymenthistory" method="post" class="payment-form">
             <% if (session.getAttribute("user") == null) { %>
-            <div class="form-group">
-                <label for="customerEmail">Customer Email:</label>
-                <input type="email" id="customerEmail" name="customerEmail" required>
-            </div>
+            <label for="customerEmail">Customer Email:</label>
+            <input type="email" id="customerEmail" name="customerEmail" required>
+
             <% } %>
-            <div class="form-group">
-                <label for="paymentId">Payment ID:</label>
-                <input type="text" id="paymentId" name="paymentId">
-            </div>
-            <div class="form-group">
-                <label for="paymentDate">Payment Date:</label>
-                <input type="date" id="paymentDate" name="paymentDate">
-            </div>
+            <label for="paymentId">Payment ID:</label>
+            <input type="text" id="paymentId" name="paymentId">
+
+            <label for="paymentDate">Payment Date:</label>
+            <input type="date" id="paymentDate" name="paymentDate">
+
             <div class="form-actions">
                 <input type="submit" value="Search Payments" class="btn btn-primary">
             </div>
@@ -141,7 +138,11 @@
                 <td><%= payment.getOrderId() %></td>
                 <td class="action-buttons">
                     <% if (customerEmail != null) { %>
-                    <a href="viewpayment?id=<%= payment.getPaymentId() %>&customerEmail=<%= customerEmail %>" class="btn btn-view btn-sm">View</a>
+                    <form action="viewpayment" method="post" class="action-form">
+                        <input type="hidden" name="id" value="<%= payment.getPaymentId() %>">
+                        <input type="hidden" name="customerEmail" value="<%= customerEmail %>">
+                        <input type="submit" value="View" class="btn-primary">
+                    </form>
                     <% } %>
                 </td>
             </tr>

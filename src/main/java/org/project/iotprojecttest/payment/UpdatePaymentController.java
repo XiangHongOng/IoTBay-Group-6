@@ -40,13 +40,13 @@ public class UpdatePaymentController extends HttpServlet {
         double orderTotalAmount = orderDAO.calculateOrderTotalAmount(order.getOrderId());
         double totalPaid = paymentDAO.getTotalPaidAmountByOrderId(order.getOrderId());
 
-        double remainingAmount = orderTotalAmount - totalPaid;
+        double remainingAmount = Math.round((orderTotalAmount - totalPaid) * 100.0) / 100.0;
 
         // Check if the payment amount exceeds the remaining amount
         if (amount > remainingAmount)
         {
             request.setAttribute("errorMessage", "Payment amount cannot exceed the remaining amount.");
-            request.getRequestDispatcher("../paymentmanagement/updatepayment.jsp").forward(request, response);
+            request.getRequestDispatcher("../paymentmanagement/paymentmanagement.jsp").forward(request, response);
             return;
         }
 

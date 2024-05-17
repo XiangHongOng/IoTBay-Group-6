@@ -343,6 +343,7 @@ public class OrderDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        totalAmount = Math.round(totalAmount * 100.0) / 100.0;
         return totalAmount;
     }
 

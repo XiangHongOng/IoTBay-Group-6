@@ -19,13 +19,16 @@ public class SubmitOrderController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int orderId = Integer.parseInt(request.getParameter("id"));
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
 
         // Update the order status to "Submitted"
         orderDAO.updateOrderStatus(orderId, "Submitted");
 
         request.setAttribute("successMessage", "Order #" + orderId + " has been submitted.");
-        request.getRequestDispatcher("../ordermanagement/vieworders.jsp").forward(request, response);
+
+        // Forward the request to the view orders page
+        request.getRequestDispatcher("vieworders").forward(request, response);
+
     }
 }

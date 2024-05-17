@@ -60,7 +60,7 @@
 </header>
 
 <main>
-    <div class="form-container">
+    <div class="product-management-container">
         <h2>Order History</h2>
 
         <%
@@ -83,23 +83,17 @@
             }
         %>
 
-        <form action="vieworders" method="get" class="order-form">
+        <form action="vieworders" method="post">
             <% if (session.getAttribute("user") == null) { %>
-            <div class="form-group">
-                <label for="customerEmail">Customer Email:</label>
-                <input type="email" id="customerEmail" name="customerEmail" required>
-            </div>
+            <label for="customerEmail">Customer Email:</label>
+            <input type="email" id="customerEmail" name="customerEmail" required>
             <% } %>
-            <div class="form-group">
-                <label for="orderId">Order ID:</label>
-                <input type="text" id="orderId" name="orderId">
-            </div>
-            <div class="form-group">
-                <label for="orderDate">Order Date:</label>
-                <input type="date" id="orderDate" name="orderDate">
-            </div>
-            <div class="form-actions">
-                <input type="submit" value="Search Orders" class="btn btn-primary">
+            <label for="orderId">Order ID:</label>
+            <input type="text" id="orderId" name="orderId">
+            <label for="orderDate">Order Date:</label>
+            <input type="date" id="orderDate" name="orderDate">
+            <div class="form-actions centered-actions">
+                <input type="submit" value="Search Orders" class="btn-add">
             </div>
         </form>
     </div>
@@ -135,9 +129,19 @@
                 <td class="action-buttons">
                     <% if (order.getStatus().equals("Saved")) { %>
                     <div class="button-group">
-                        <a href="editorder?id=<%= order.getOrderId() %>" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="submitorder?id=<%= order.getOrderId() %>" class="btn btn-update btn-sm">Submit</a>
-                        <a href="cancelorder?id=<%= order.getOrderId() %>" class="btn btn-cancel btn-sm">Cancel</a>
+                        <form action="editorder" method="post" class="action-form">
+                            <input type="hidden" name="action" value="edit">
+                            <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                            <input type="submit" value="Edit" class="btn btn-primary btn-sm">
+                        </form>
+                        <form action="submitorder" method="post" class="action-form">
+                            <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                            <input type="submit" value="Submit" class="btn-add">
+                        </form>
+                        <form action="cancelorder" method="post" class="action-form">
+                            <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                            <input type="submit" value="Cancel" class="btn-cancel">
+                        </form>
                     </div>
                     <% } else { %>
                     <span class="no-actions-message">No actions available</span>
@@ -152,6 +156,5 @@
         <% } %>
     </div>
 </main>
-
 </body>
 </html>

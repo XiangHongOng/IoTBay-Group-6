@@ -30,18 +30,13 @@ public class ProductManagementController extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session != null)
         {
+            System.out.println("1");
             // Check if the user is a staff member
             User user = (User) session.getAttribute("user");
             if (user != null && staffDAO.isUserStaff(user.getUserId()))
             {
-                // Check if the user is trying to edit a product
-                String action = request.getParameter("action");
-                if (action != null && action.equals("edit"))
-                {
-                    // Set the action and id parameters as request attributes
-                    request.setAttribute("action", action);
-                    request.setAttribute("id", request.getParameter("id"));
-                }
+                System.out.println("2");
+
                 // Retrieve all products
                 List<Product> products = productDAO.getAllProducts();
                 request.setAttribute("products", products);
@@ -50,14 +45,15 @@ public class ProductManagementController extends HttpServlet {
             }
             else
             {
+                System.out.println("3");
                 // Redirect to the login page or display an error message
-                response.sendRedirect("login");
+                response.sendRedirect("../login");
             }
         }
         else
         {
             // Redirect to the login page or display an error message
-            response.sendRedirect("login");
+            response.sendRedirect("../login");
         }
     }
 
@@ -84,6 +80,7 @@ public class ProductManagementController extends HttpServlet {
                         newProduct.setUnitPrice(unitPrice);
                         newProduct.setQuantity(quantity);
 
+                        request.setAttribute("successMessage", "Product added successfully.");
                         productDAO.createProduct(newProduct);
                         break;
                     case "update":
@@ -100,16 +97,20 @@ public class ProductManagementController extends HttpServlet {
                         existingProduct.setUnitPrice(unitPrice);
                         existingProduct.setQuantity(quantity);
 
+                        request.setAttribute("successMessage", "Product updated successfully.");
                         productDAO.updateProduct(existingProduct);
                         break;
                     case "delete":
                         // Delete product logic
                         productId = Integer.parseInt(request.getParameter("id"));
                         productDAO.deleteProduct(productId);
+                        request.setAttribute("successMessage", "Product deleted successfully.");
                         break;
                 }
             }
         }
-        response.sendRedirect("product-management");
+        List<Product> products = productDAO.getAllProducts();
+        request.setAttribute("products", products);
+        request.getRequestDispatcher("productmanagement.jsp").forward(request, response);
     }
 }

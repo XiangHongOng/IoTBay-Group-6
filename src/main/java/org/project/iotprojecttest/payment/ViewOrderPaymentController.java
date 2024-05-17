@@ -25,11 +25,12 @@ public class ViewOrderPaymentController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         paymentDAO = new PaymentDAO();
-        orderDAO = new OrderDAO();        customerDAO = new CustomerDAO();
+        orderDAO = new OrderDAO();
+        customerDAO = new CustomerDAO();
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         String customerEmail = request.getParameter("customerEmail");
 

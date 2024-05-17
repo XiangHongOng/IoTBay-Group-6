@@ -7,7 +7,6 @@
 <html>
 <head>
     <title>Product Management</title>
-    <!-- Linking the external CSS file for styling -->
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
@@ -71,6 +70,26 @@
     <div class="product-management-container">
         <h2>Product Management</h2>
 
+        <%
+            String successMessage = (String) request.getAttribute("successMessage");
+            if (successMessage != null) {
+        %>
+        <div class="message-container">
+            <p class="success-message"><%= successMessage %></p>
+        </div>
+        <%
+            }
+        %>
+
+        <%
+            String error = (String) request.getAttribute("errorMessage");
+            if (error != null) {
+        %>
+        <p class="error-message"><%= error %></p>
+        <%
+            }
+        %>
+
         <!-- Determine if we're adding a new product or editing an existing one based on the action parameter -->
         <h3><%= request.getParameter("action") != null && request.getParameter("action").equals("edit") ? "Edit" : "Add" %> Product</h3>
         <form action="product-management" method="post">
@@ -94,12 +113,12 @@
             <input type="number" id="quantity" name="quantity" value="<%= request.getParameter("action") != null && request.getParameter("action").equals("edit") ? productDAO.getProductById(Integer.parseInt(request.getParameter("id"))).getQuantity() : "" %>" required>
             <!-- Conditionally show update or add button based on the action -->
             <% if (request.getParameter("action") != null && request.getParameter("action").equals("edit")) { %>
-            <div class="form-actions">
+            <div class="form-actions centered-actions">
                 <input type="submit" value="Update Product" class="btn-update">
                 <a href="product-management" class="btn-cancel">Cancel</a>
             </div>
             <% } else { %>
-            <div class="form-actions">
+            <div class="form-actions centered-actions">
                 <input type="submit" value="Add Product" class="btn-add">
             </div>
             <% } %>
@@ -131,13 +150,17 @@
                 <td>
                     <!-- Action buttons for each product: edit and delete -->
                     <div class="action-buttons">
-                        <!-- Edit button sends the user to the same page with action=edit and the product's ID -->
-                        <a href="product-management?action=edit&id=<%= product.getProductId() %>" class="btn">Edit</a>
+                        <!-- Edit form with hidden inputs to tell the server to edit the product on submission -->
+                        <form action="product-management" method="post" class="action-form">
+                            <input type="hidden" name="action" value="edit">
+                            <input type="hidden" name="id" value="<%= product.getProductId() %>">
+                            <input type="submit" value="Edit" class="btn-add">
+                        </form>
                         <!-- Delete form with hidden inputs to tell the server to delete the product on submission -->
                         <form action="product-management" method="post" class="action-form">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="<%= product.getProductId() %>">
-                            <input type="submit" value="Delete" class="btn">
+                            <input type="submit" value="Delete" class="btn-cancel">
                         </form>
                     </div>
                 </td>

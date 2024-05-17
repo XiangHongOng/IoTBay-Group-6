@@ -85,21 +85,17 @@
             }
         %>
 
-        <form action="paymentmanagement" method="get" class="order-form">
+        <form action="paymentmanagement" method="post" class="order-form">
             <% if (session.getAttribute("user") == null) { %>
-            <div class="form-group">
-                <label for="customerEmail">Customer Email:</label>
-                <input type="email" id="customerEmail" name="customerEmail" required>
-            </div>
+            <label for="customerEmail">Customer Email:</label>
+            <input type="email" id="customerEmail" name="customerEmail" required>
+
             <% } %>
-            <div class="form-group">
-                <label for="orderId">Order ID:</label>
-                <input type="text" id="orderId" name="orderId">
-            </div>
-            <div class="form-group">
-                <label for="orderDate">Order Date:</label>
-                <input type="date" id="orderDate" name="orderDate">
-            </div>
+            <label for="orderId">Order ID:</label>
+            <input type="text" id="orderId" name="orderId">
+
+            <label for="orderDate">Order Date:</label>
+            <input type="date" id="orderDate" name="orderDate">
             <div class="form-actions">
                 <input type="submit" value="Search Orders" class="btn btn-primary">
             </div>
@@ -138,9 +134,18 @@
                 <td><%= order.getStatus() %></td>
                 <td class="action-buttons">
                     <% if (payment == null) { %>
-                    <a href="createpayment?orderId=<%= order.getOrderId() %>" class="btn btn-primary">Create Payment</a>
+                    <form action="createpayment" method="post" class="action-form">
+                        <input type="hidden" name="action" value="displayForm">
+                        <input type="hidden" name="customerEmail" value="<%= customerEmail %>">
+                        <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                        <input type="submit" value="Create Payment" class="btn btn-primary">
+                    </form>
                     <% } else { %>
-                    <a href="vieworderpayment?orderId=<%= order.getOrderId() %>&customerEmail=<%= customerEmail %>" class="btn btn-view">View Payment</a>
+                    <form action="vieworderpayment" method="post" class="action-form">
+                        <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                        <input type="hidden" name="customerEmail" value="<%= customerEmail %>">
+                        <input type="submit" value="View Payment" class="btn btn-primary">
+                    </form>
                     <% } %>
                 </td>
             </tr>

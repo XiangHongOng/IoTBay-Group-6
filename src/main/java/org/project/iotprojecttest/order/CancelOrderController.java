@@ -8,12 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.project.iotprojecttest.model.dao.OrderDAO;
 import org.project.iotprojecttest.model.dao.OrderLineItemDAO;
 import org.project.iotprojecttest.model.dao.ProductDAO;
-import org.project.iotprojecttest.model.objects.Order;
-import org.project.iotprojecttest.model.objects.OrderLineItem;
 import org.project.iotprojecttest.model.util.OrderUtil;
 
 import java.io.IOException;
-import java.util.List;
+
 
 @WebServlet(name = "cancelorder", value = "/order/cancelorder")
 public class CancelOrderController extends HttpServlet {
@@ -29,18 +27,19 @@ public class CancelOrderController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int orderId = Integer.parseInt(request.getParameter("id"));
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
 
-        //Get all items in the order and restore the stock of each product
+        // Get all items in the order and restore the stock of each product
         OrderUtil orderUtil = new OrderUtil();
         orderUtil.restoreProductStockForOrder(orderId);
 
-        //Update the order status to "Cancelled"
+        // Update the order status to "Cancelled"
         orderDAO.updateOrderStatus(orderId, "Cancelled");
+
         request.setAttribute("successMessage", "Order #" + orderId + " has been cancelled.");
 
-        // Forward the request to the vieworders.jsp
-        request.getRequestDispatcher("../ordermanagement/vieworders.jsp").forward(request, response);
-    }
+        // Forward the request to the view orders page
+        request.getRequestDispatcher("vieworders").forward(request, response);
+}
 }

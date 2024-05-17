@@ -60,7 +60,7 @@
 </header>
 
 <main>
-    <div class="form-container">
+    <div class="product-management-container">
         <h2>View Payment</h2>
 
         <%
@@ -94,14 +94,14 @@
             double orderTotalAmount = orderDAO.calculateOrderTotalAmount(order.getOrderId());
             double totalPaid = paymentDAO.getTotalPaidAmountByOrderId(order.getOrderId());
 
-            double remainingAmount = orderTotalAmount - totalPaid;
+            double remainingAmount = Math.round((orderTotalAmount - totalPaid) * 100.0) / 100.0;
         %>
 
         <p>Order Total: <%= orderTotalAmount %></p>
         <p>Total Paid: <%= totalPaid %></p>
         <p>Remaining Amount: <%= remainingAmount %></p>
 
-        <form action="updatepayment" method="post" class="payment-form">
+        <form action="updatepayment" method="post">
             <input type="hidden" name="paymentId" value="<%= request.getAttribute("paymentId") %>">
             <div class="form-group">
                 <label for="paymentMethod">Payment Method:</label>
@@ -122,12 +122,21 @@
                 <label for="paymentDate">Payment Date:</label>
                 <input type="date" id="paymentDate" name="paymentDate" value="<%= request.getAttribute("paymentDate") %>" required>
             </div>
-            <div class="form-actions">
-                <input type="submit" value="Update Payment" class="btn btn-primary">
-                <a href="deletepayment?paymentId=<%= request.getAttribute("paymentId") %>" class="btn btn-danger">Delete Payment</a>
-                <a href="submitpayment?paymentId=<%= request.getAttribute("paymentId") %>" class="btn btn-success">Submit Payment</a>
+            <div class="form-actions centered-actions">
+                <input type="submit" value="Update Payment" class="btn-add">
             </div>
         </form>
+        <div class="form-actions centered-actions">
+            <form action="deletepayment" method="post" class="action-form">
+                <input type="hidden" name="paymentId" value="<%= request.getAttribute("paymentId") %>">
+                <input type="submit" value="Delete Payment" class="btn-cancel">
+            </form>
+
+            <form action="submitpayment" method="post" class="action-form">
+                <input type="hidden" name="paymentId" value="<%= request.getAttribute("paymentId") %>">
+                <input type="submit" value="Submit Payment" class="btn-primary">
+            </form>
+        </div>
     </div>
 </main>
 
