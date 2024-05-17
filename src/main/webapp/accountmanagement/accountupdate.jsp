@@ -103,6 +103,9 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password">
 
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" value="<%= customer != null ? customer.getAddress() : "Not set" %>">
+
             <label for="phone">Phone:</label>
             <input type="text" id="phone" name="phone" value="<%= user.getPhone() %>">
 

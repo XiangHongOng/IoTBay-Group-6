@@ -123,5 +123,28 @@ public class StaffDAO {
         return false;
     }
 
-    // ... (add other methods as needed)
+    public void updateStaff(Staff staff) {
+        String query = "UPDATE staff SET FullName = ?, Position = ?, Address = ? WHERE StaffID = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, staff.getFullName());
+            statement.setString(2, staff.getPosition());
+            statement.setString(3, staff.getAddress());
+            statement.setInt(4, staff.getStaffId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteStaff(int staffId) {
+        String query = "DELETE FROM staff WHERE StaffID = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, staffId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

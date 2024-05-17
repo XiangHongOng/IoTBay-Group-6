@@ -23,6 +23,7 @@ public class RegisterServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
         String type = request.getParameter("customerType");
 
         UserDAO userDAO = new UserDAO();
@@ -61,7 +62,7 @@ public class RegisterServlet extends HttpServlet {
         registeredCustomer.setUserId(userId); // Set the UserId from the registeredUser
         registeredCustomer.setFullName(fullName);
         registeredCustomer.setCustomerType(type);
-        registeredCustomer.setAddress(null);
+        registeredCustomer.setAddress(address);
         registeredCustomer.setEmail(email); // Store the email in the Customer object
         customerDAO.createCustomer(registeredCustomer);
 

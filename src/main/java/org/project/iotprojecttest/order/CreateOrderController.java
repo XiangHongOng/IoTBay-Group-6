@@ -77,6 +77,7 @@ public class CreateOrderController extends HttpServlet {
             // Check if the customer exists
             String customerEmail = request.getParameter("customerEmail");
             String customerName = request.getParameter("customerName");
+            String customerAddress = request.getParameter("customerAddress");
             customer = customerDAO.getCustomerByEmail(customerEmail);
             if (customer == null)
             {
@@ -85,6 +86,7 @@ public class CreateOrderController extends HttpServlet {
                 customer.setFullName(customerName);
                 customer.setCustomerType("Individual");
                 customer.setEmail(customerEmail);
+                customer.setAddress(customerAddress);
                 int customerId = customerDAO.createCustomer(customer);
                 customer.setCustomerId(customerId);
             }

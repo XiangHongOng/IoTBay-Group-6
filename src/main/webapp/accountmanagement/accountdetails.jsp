@@ -79,6 +79,7 @@
             <ul class="account-details">
                 <li><strong>Full Name:</strong> <%= customer != null ? customer.getFullName() : "Not set"%></li>
                 <li><strong>Email:</strong> <%= user.getEmail() %></li>
+                <li><strong>Address:</strong> <%= customer != null ? customer.getAddress() : "Not set" %></li>
                 <li><strong>Phone:</strong> <%= user.getPhone() %></li>
             </ul>
             <% } else { %>

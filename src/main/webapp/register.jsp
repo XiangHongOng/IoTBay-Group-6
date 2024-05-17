@@ -58,6 +58,7 @@
             <input type="text" id="fullName" name="fullName" placeholder="Full Name" required><br>
             <input type="email" id="email" name="email" placeholder="Email" required><br>
             <input type="password" id="password" name="password" placeholder="Password" required><br>
+            <input type="text" id="address" name="address" placeholder="Address" required><br>
             <input type="text" id="phone" name="phone" placeholder="Phone" required><br>
             <div class="form-group">
                 <label for="customerType">Customer Type:</label>

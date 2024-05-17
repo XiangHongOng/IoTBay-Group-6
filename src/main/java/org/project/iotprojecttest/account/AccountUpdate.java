@@ -7,8 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.project.iotprojecttest.model.dao.CustomerDAO;
+import org.project.iotprojecttest.model.dao.StaffDAO;
 import org.project.iotprojecttest.model.dao.UserDAO;
 import org.project.iotprojecttest.model.objects.Customer;
+import org.project.iotprojecttest.model.objects.Staff;
 import org.project.iotprojecttest.model.objects.User;
 
 import java.io.IOException;
@@ -23,6 +25,7 @@ public class AccountUpdate extends HttpServlet {
         HttpSession session = request.getSession();
         User originalUser = (User) session.getAttribute("user");
         UserDAO userDAO = new UserDAO();
+        StaffDAO staffDAO = new StaffDAO();
         CustomerDAO customerDAO = new CustomerDAO();
 
         // Check if the user is logged in
@@ -35,20 +38,31 @@ public class AccountUpdate extends HttpServlet {
             String fullName = request.getParameter("fullName");
             String email = request.getParameter("email");
             String password = request.getParameter("password");
+            String address = request.getParameter("address");
             String phone = request.getParameter("phone");
 
             // Check if the name field is empty
             if (!fullName.isEmpty())
             {
-                customer.setFullName(fullName);
-                customerDAO.updateCustomer(customer);
+                if (customer != null)
+                {
+                    customer.setFullName(fullName);
+                    customerDAO.updateCustomer(customer);
+                }
+
+                if (staffDAO.isUserStaff(originalUser.getUserId()))
+                {
+                    Staff staff = staffDAO.getStaffByUserId(originalUser.getUserId());
+                    staff.setFullName(fullName);
+                    staffDAO.updateStaff(staff);
+                }
             }
 
             // Check if the email field is empty
             if (!email.isEmpty())
             {
                 // Check if the email address already exists
-                if (userDAO.emailExists(email) && !email.equals(originalUser.getEmail()))
+                if ((userDAO.emailExists(email) && !email.equals(originalUser.getEmail())) || (customerDAO.getCustomerByEmail(email) != null && !email.equals(originalUser.getEmail())))
                 {
                     request.setAttribute("errorMessage", "The email address already exists.");
                     request.getRequestDispatcher("../accountmanagement/accountupdate.jsp").forward(request, response);
@@ -62,6 +76,22 @@ public class AccountUpdate extends HttpServlet {
             if (!password.isEmpty())
             {
                 updatedUser.setPassword(password);
+            }
+
+            if (!address.isEmpty())
+            {
+                if (customer != null)
+                {
+                    customer.setAddress(address);
+                    customerDAO.updateCustomer(customer);
+                }
+
+                if (staffDAO.isUserStaff(originalUser.getUserId()))
+                {
+                    Staff staff = staffDAO.getStaffByUserId(originalUser.getUserId());
+                    staff.setAddress(address);
+                    staffDAO.updateStaff(staff);
+                }
             }
 
             // Check if the phone field is empty

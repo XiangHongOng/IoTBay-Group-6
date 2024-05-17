@@ -106,6 +106,9 @@
 
             <label for="customerEmail">Your Email:</label>
             <input type="email" name="customerEmail" id="customerEmail" required>
+
+            <label for="customerAddress">Your Address:</label>
+            <input type="text" name="customerAddress" id="customerAddress" required>
             <% } %>
 
             <div class="form-actions centered-actions">
