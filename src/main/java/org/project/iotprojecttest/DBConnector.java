@@ -3,9 +3,9 @@ package org.project.iotprojecttest;
 import java.sql.*;
 
 public class DBConnector {
-    private static final String URL = "jdbc:mysql://localhost:3306/iotbay";
+    private static final String URL = "jdbc:mysql://localhost:3306/iotassignment";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "Pepsicola1";
+    private static final String PASSWORD = "password"; // change db password and name here
 
     static {
         try {
