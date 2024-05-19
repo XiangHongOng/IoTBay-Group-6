@@ -113,7 +113,8 @@ INSERT INTO Users (Email, Password, Phone) VALUES
                                                ('mia.cook@example.com', 'password234', '2345678901'),
                                                ('noah.baker@example.com', 'password567', '5678901234'),
                                                ('olivia.morris@example.com', 'password890', '8901234567'),
-                                               ('cam@cam.com', '123', '123');
+                                               ('cam@cam.com', '123', '123'),
+                                               ('admin@admin.com', 'admin', '123');
 ;
 
 -- Insert data into Customers table
@@ -137,7 +138,9 @@ INSERT INTO Customers (UserID, FullName, CustomerType, Address, Email, IsActive)
                                                                                      (17, 'Liam Young', 'Individual', '630 Spruce Dr, City, Country', null, true),
                                                                                      (18, 'Mia Cook', 'Company', '529 Ash Ave, Town, Country', 'mia.cook@example.com', true),
                                                                                      (19, 'Noah Baker', 'Individual', '418 Oak Rd, Village, Country', null, true),
-                                                                                     (20, 'Olivia Morris', 'Individual', '307 Maple Ln, City, Country', null, true);
+                                                                                     (20, 'Olivia Morris', 'Individual', '307 Maple Ln, City, Country', null, true),
+                                                                                     (21, 'Cam', 'Test', 'no dox', null, true),
+                                                                                     (22, 'Admin', 'Individual', 'Admin', null, true);
 
 -- Insert data into Staff table
 INSERT INTO Staff (UserID, FullName, Position, Address) VALUES
@@ -161,7 +164,8 @@ INSERT INTO Staff (UserID, FullName, Position, Address) VALUES
                                                             (18, 'Grace Harvey', 'Customer Support', '529 staff Ave, Town, Country'),
                                                             (19, 'Harrison Reeves', 'Shipping Coordinator', '418 staff Rd, Village, Country'),
                                                             (20, 'Ivy Larson', 'Inventory Specialist', '307 staff Ln, City, Country'),
-                                                            (21, 'Cam', 'Test', 'no dox');
+                                                            (21, 'Cam', 'Test', 'no dox'),
+                                                            (22, 'Admin', 'Admin', 'Admin');
 
 -- Insert data into Suppliers table
 INSERT INTO Suppliers (ContactName, Company, Email, Address) VALUES

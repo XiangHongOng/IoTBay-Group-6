@@ -50,7 +50,7 @@ public class PaymentTest {
     }
 
     @Test
-    public void testGetPaymentsByCustomerWithoutUserID() {
+    public void testGetPaymentsByCustomerWithoutUser() {
         PaymentDAO paymentDAO = new PaymentDAO();
 
         Customer nonUserCustomer = new Customer();
